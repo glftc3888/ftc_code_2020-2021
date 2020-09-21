@@ -12,5 +12,7 @@ abstract class TeleOp extends OpMode {
     DcMotor bottomLeft = hardwareMap.dcMotor.get("Bottom left motor");
     DcMotor bottomRight = hardwareMap.dcMotor.get("Bottom right motor");
 
-    
+    public void loop(){
+
+    }
 }
