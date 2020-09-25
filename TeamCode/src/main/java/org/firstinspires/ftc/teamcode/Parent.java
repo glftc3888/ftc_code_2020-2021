@@ -76,7 +76,7 @@ abstract class Parent extends OpMode {
             setPowerAll(0);
         }
 
-        public void sideways(){
+        public void sideways(int pos, double pow){
 
         }
 
