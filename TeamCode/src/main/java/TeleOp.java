@@ -35,6 +35,10 @@ abstract class TeleOp extends OpMode {
         bottomLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        topLeft.setPower(0);
+        topRight.setPower(0);
+        bottomLeft.setPower(0);
+        bottomRight.setPower(0);
     }
 
     public void loop(){
