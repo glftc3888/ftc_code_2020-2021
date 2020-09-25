@@ -87,6 +87,17 @@ abstract class Parent extends OpMode {
             setPowerAll(0);
         }
 
+        public void rotation(int pos, double pow){
+            setPosAll(pos, pos, pos, pos);
+
+            setPowerAll(pow);
+
+            while(topLeft.isBusy()){}
+
+            setPowerAll(0);
+
+        }
+
 
     }
 
