@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 abstract class Parent extends OpMode {
 
+    
     DcMotor topLeft;
     DcMotor topRight;
     DcMotor bottomLeft;
