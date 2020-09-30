@@ -97,6 +97,16 @@ abstract class Parent extends OpMode {
             setPowerAll(0);
 
         }
+        /// This is Andrew's attempt on moving backwards :|
+        public void backwards(int pos, double pow){
+            setPosAll(-pos);
+
+            setPowerAll(pow);
+
+            while(topLeft.isBusy()){}
+
+            setPowerAll(0);
+        }
 
 
     }
