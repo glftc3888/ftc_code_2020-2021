@@ -100,10 +100,10 @@ abstract class Parent extends OpMode {
 
         }
 
-        public void diagonal(int posLt,int posRt,double powLt, double powRt){
-            setPosAll(posLt,posRt,posRt,posL);
+        public void diagonal(int posLTRB,int posRTLB,double powLTRB, double powRTLB){
+            setPosAll(posLTRB,posRTLB,posRTLB,posLTRB);
 
-            setPowerAll(powLt,powRt,powRt,powLt);
+            setPowerAll(powLTRB,powRTLB,powRTLB,powLTRB);
 
             while(topLeft.isBusy() || topRight.isBusy() ){}
 
