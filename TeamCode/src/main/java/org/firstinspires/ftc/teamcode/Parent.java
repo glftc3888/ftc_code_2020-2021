@@ -67,7 +67,9 @@ abstract class Parent extends OpMode {
             bottomRight.setTargetPosition(posBR);
         }
 
-        public void move(int pos, double pow){
+
+
+        public void fRbR(int pos, double pow){
             setPosAll(pos);
 
             setPowerAll(pow);
