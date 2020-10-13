@@ -87,6 +87,7 @@ abstract class Parent extends OpMode {
         }
 
         public void diagonal(int pos,double pow){
+            boolean t=true;
 
             setPosAll(pos,posTR,pos,posBR);
 
