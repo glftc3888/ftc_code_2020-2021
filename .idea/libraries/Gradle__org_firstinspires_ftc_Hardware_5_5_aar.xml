@@ -1,7 +1,6 @@
 <component name="libraryTable">
   <library name="Gradle: org.firstinspires.ftc:Hardware:5.5@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4a055c62e8409626b2e61ce4fed92546/jetified-Hardware-5.5/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4a055c62e8409626b2e61ce4fed92546/jetified-Hardware-5.5/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4a055c62e8409626b2e61ce4fed92546/jetified-Hardware-5.5/res" />
     </CLASSES>

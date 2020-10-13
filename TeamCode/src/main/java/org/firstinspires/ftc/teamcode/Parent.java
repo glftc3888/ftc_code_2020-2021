@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 abstract class Parent extends OpMode {
 
+
     DcMotor topLeft;
     DcMotor topRight;
     DcMotor bottomLeft;
@@ -66,7 +67,9 @@ abstract class Parent extends OpMode {
             bottomRight.setTargetPosition(posBR);
         }
 
-        public void move(int pos, double pow){
+
+
+        public void fRbR(int pos, double pow){
             setPosAll(pos);
 
             setPowerAll(pow);
@@ -77,7 +80,7 @@ abstract class Parent extends OpMode {
         }
 
         public void sideways(int pos, double pow){
-            setPosAll(pos, -pos, pos, -pos);
+            setPosAll(pos, -pos, -pos, pos);
 
             setPowerAll(pow);
 
@@ -86,20 +89,17 @@ abstract class Parent extends OpMode {
             setPowerAll(0);
         }
 
-        public void diagonal(int pos,double pow){
-            boolean t=true;
-
-            setPosAll(pos,posTR,pos,posBR);
+        public void rotation(int pos, double pow){
+            setPosAll(-pos, pos, -pos, pos);
 
             setPowerAll(pow);
 
             while(topLeft.isBusy()){}
 
             setPowerAll(0);
+
         }
-
-
-
+        
 
     }
 
