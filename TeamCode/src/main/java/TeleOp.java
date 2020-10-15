@@ -17,7 +17,7 @@ abstract class TeleOp extends OpMode {
     DcMotor intake;
     Servo servoLauncher;
 
-
+    DcMotor launcher;
 
 
     public void init(){
@@ -26,25 +26,35 @@ abstract class TeleOp extends OpMode {
         bottomLeft = hardwareMap.dcMotor.get("Bottom left motor");
         bottomRight = hardwareMap.dcMotor.get("Bottom right motor");
 
+        launcher = hardwareMap.dcMotor.get("Launcher");
+
         topLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         topRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         topLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         topRight.setDirection(DcMotorSimple.Direction.FORWARD);
         bottomLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        launcher.setDirection(DcMotorSimple.Direction.FORWARD);
+
         topLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        launcher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         topLeft.setPower(0);
         topRight.setPower(0);
         bottomLeft.setPower(0);
         bottomRight.setPower(0);
+
+        launcher.setPower(0);
     }
 
     public void loop(){
