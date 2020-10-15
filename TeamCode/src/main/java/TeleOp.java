@@ -16,6 +16,7 @@ abstract class TeleOp extends OpMode {
     DcMotor intake;
 
     DcMotor launcher;
+    boolean on_off = false;
 
 
     public void init(){
@@ -60,5 +61,13 @@ abstract class TeleOp extends OpMode {
         topRight.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
         bottomLeft.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
         bottomRight.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x);
+    }
+
+    public void change(){
+        on_off = !on_off;
+        if(!on_off)
+            launcher.setPower(0);
+        else
+            launcher.setPower(1);
     }
 }
