@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 abstract class Parent extends OpMode {
 
@@ -14,6 +15,7 @@ abstract class Parent extends OpMode {
     DcMotor bottomRight;
 
     ColorRangeSensor colorRangeSensor;
+    Servo servoLauncher;
 
     public void init(){
         topLeft = hardwareMap.dcMotor.get("Top left motor");
