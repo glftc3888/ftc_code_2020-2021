@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -11,6 +12,7 @@ abstract class Parent extends OpMode {
     DcMotor topRight;
     DcMotor bottomLeft;
     DcMotor bottomRight;
+    ColorRangeSensor colorRangeSensor;
 
     public void init(){
         topLeft = hardwareMap.dcMotor.get("Top left motor");
