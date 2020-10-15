@@ -21,6 +21,10 @@ abstract class Parent extends OpMode {
     ColorRangeSensor colorRangeSensor;
     Servo servoLauncher;
 
+    Servo clawArm;
+    Servo clawElbow;
+    Servo clawClaw;
+
     public void init(){
         topLeft = hardwareMap.dcMotor.get("Top left motor");
         topRight = hardwareMap.dcMotor.get("Top right motor");
