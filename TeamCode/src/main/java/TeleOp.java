@@ -5,13 +5,17 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpV2", group = "TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpV1", group = "TeleOp")
 
 abstract class TeleOp extends OpMode {
     DcMotor topLeft;
     DcMotor topRight;
     DcMotor bottomLeft;
     DcMotor bottomRight;
+
+    DcMotor intake;
+
+
 
 
     public void init(){
