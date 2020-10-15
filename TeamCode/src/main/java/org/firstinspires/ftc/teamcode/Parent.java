@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDistance;
+
 abstract class Parent extends OpMode {
 
 
@@ -13,9 +15,15 @@ abstract class Parent extends OpMode {
     DcMotor topRight;
     DcMotor bottomLeft;
     DcMotor bottomRight;
+    SensorREVColorDistance frontSensor;
+
 
     ColorRangeSensor colorRangeSensor;
     Servo servoLauncher;
+
+    Servo clawArm;
+    Servo clawElbow;
+    Servo clawClaw;
 
     public void init(){
         topLeft = hardwareMap.dcMotor.get("Top left motor");

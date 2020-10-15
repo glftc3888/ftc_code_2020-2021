@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpV1", group = "TeleOp")
 
@@ -14,6 +15,7 @@ abstract class TeleOp extends OpMode {
     DcMotor bottomRight;
 
     DcMotor intake;
+    Servo servoLauncher;
 
     DcMotor launcher;
     boolean on_off = false;
