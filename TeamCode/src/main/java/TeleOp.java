@@ -58,13 +58,6 @@ abstract class TeleOp extends OpMode {
         launcher.setPower(0);
     }
 
-    public void loop(){
-        topLeft.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
-        topRight.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
-        bottomLeft.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
-        bottomRight.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x);
-    }
-
     public void change(){
         on_off = !on_off;
         if(!on_off)
@@ -72,4 +65,17 @@ abstract class TeleOp extends OpMode {
         else
             launcher.setPower(1);
     }
+
+    public void loop(){
+        topLeft.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
+        topRight.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
+        bottomLeft.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
+        bottomRight.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x);
+
+        if (gamepad1.a)
+            change();
+
+    }
+
+
 }
