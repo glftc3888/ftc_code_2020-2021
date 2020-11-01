@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/FtcRobotController.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/FtcRobotController.iml" group="ftc/FtcRobotController" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamCode/TeamCode.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamCode/TeamCode.iml" group="ftc/TeamCode" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/ftc.iml" filepath="$PROJECT_DIR$/.idea/ftc.iml" group="ftc" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ftc_code_2020-2021.iml" filepath="$PROJECT_DIR$/.idea/modules/ftc_code_2020-2021.iml" group="ftc_code_2020-2021" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AndroidStudioProjects.ftc_code_2020-2021.iml" filepath="$PROJECT_DIR$/.idea/modules/AndroidStudioProjects.ftc_code_2020-2021.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/FtcRobotController/ftc_code_2020-2021.FtcRobotController.iml" filepath="$PROJECT_DIR$/.idea/modules/FtcRobotController/ftc_code_2020-2021.FtcRobotController.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TeamCode/ftc_code_2020-2021.TeamCode.iml" filepath="$PROJECT_DIR$/.idea/modules/TeamCode/ftc_code_2020-2021.TeamCode.iml" />
     </modules>
   </component>
 </project>

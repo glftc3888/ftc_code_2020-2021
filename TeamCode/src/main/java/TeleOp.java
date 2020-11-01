@@ -1,4 +1,5 @@
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -14,8 +15,7 @@ abstract class TeleOp extends OpMode {
     DcMotor bottomLeft;
     DcMotor bottomRight;
 
-    DcMotor intake;
-    Servo servoLauncher;
+    CRServo frontArm, backArm;
 
     DcMotor launcher;
     boolean on_off = false;
@@ -26,6 +26,9 @@ abstract class TeleOp extends OpMode {
         topRight = hardwareMap.dcMotor.get("Top right motor");
         bottomLeft = hardwareMap.dcMotor.get("Bottom left motor");
         bottomRight = hardwareMap.dcMotor.get("Bottom right motor");
+
+        frontArm = hardwareMap.crservo.get("front arm");
+        backArm = hardwareMap.crservo.get("back arm");
 
         launcher = hardwareMap.dcMotor.get("Launcher");
 
@@ -41,6 +44,9 @@ abstract class TeleOp extends OpMode {
         bottomLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        frontArm.setDirection(CRServo.Direction.FORWARD);
+        backArm.setDirection(CRServo.Direction.FORWARD);
+
         launcher.setDirection(DcMotorSimple.Direction.FORWARD);
 
         topLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -54,6 +60,9 @@ abstract class TeleOp extends OpMode {
         topRight.setPower(0);
         bottomLeft.setPower(0);
         bottomRight.setPower(0);
+
+        backArm.setPower(0);
+        frontArm.setPower(0);
 
         launcher.setPower(0);
     }
@@ -71,6 +80,11 @@ abstract class TeleOp extends OpMode {
         topRight.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
         bottomLeft.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
         bottomRight.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x);
+
+
+        backArm.setPower(gamepad2.left_stick_y);
+        frontArm.setPower(gamepad2.left_stick_y);
+
 
         if (gamepad1.a)
             change();
