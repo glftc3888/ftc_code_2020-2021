@@ -1,3 +1,4 @@
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,9 +8,9 @@ import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpV1", group = "TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOp")
 
-abstract class TeleOp extends OpMode {
+public class TeleOp extends OpMode {
     DcMotor topLeft;
     DcMotor topRight;
     DcMotor bottomLeft;
@@ -75,7 +76,7 @@ abstract class TeleOp extends OpMode {
             launcher.setPower(1);
     }
 
-    public void loop(){
+    public void loop() {
         topLeft.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
         topRight.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
         bottomLeft.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
@@ -90,6 +91,5 @@ abstract class TeleOp extends OpMode {
             change();
 
     }
-
 
 }
