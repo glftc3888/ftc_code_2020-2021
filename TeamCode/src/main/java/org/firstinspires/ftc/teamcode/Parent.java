@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDistance;
 
-abstract class Parent extends OpMode {
+public abstract class Parent extends LinearOpMode {
 
 
     DcMotor topLeft;
@@ -23,23 +24,24 @@ abstract class Parent extends OpMode {
 
     Servo clawArm;
     Servo clawElbow;
+
     Servo clawClaw;
 
-    public void init(){
-        topLeft = hardwareMap.dcMotor.get("Top left motor");
-        topRight = hardwareMap.dcMotor.get("Top right motor");
-        bottomLeft = hardwareMap.dcMotor.get("Bottom left motor");
-        bottomRight = hardwareMap.dcMotor.get("Bottom right motor");
+    public void initRobo(){
+        topLeft = hardwareMap.dcMotor.get("topLeftMotor");
+        topRight = hardwareMap.dcMotor.get("topRightMotor");
+        bottomLeft = hardwareMap.dcMotor.get("bottomLeftMotor");
+        bottomRight = hardwareMap.dcMotor.get("bottomRightMotor");
 
         topLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         topRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        topLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        topRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        bottomLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        topLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        topRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        bottomRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -50,6 +52,16 @@ abstract class Parent extends OpMode {
         topRight.setPower(0);
         bottomLeft.setPower(0);
         bottomRight.setPower(0);
+
+        waitForStart();
+        }
+
+        public void setAllRun(){
+            topLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            topRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bottomLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bottomRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         }
 
         public void setPowerAll(double pow){
@@ -67,6 +79,11 @@ abstract class Parent extends OpMode {
         }
 
         public void setPosAll(int pos){
+            topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bottomRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
             topLeft.setTargetPosition(pos);
             topRight.setTargetPosition(pos);
             bottomLeft.setTargetPosition(pos);
@@ -83,9 +100,12 @@ abstract class Parent extends OpMode {
 
 
         public void fRbR(int pos, double pow){
-            setPosAll(pos);
+
+            setPosAll(pos, -pos, pos, -pos);
 
             setPowerAll(pow);
+
+            setAllRun();
 
             while(topLeft.isBusy()){}
 
@@ -97,6 +117,8 @@ abstract class Parent extends OpMode {
 
             setPowerAll(pow);
 
+            setAllRun();
+
             while(topLeft.isBusy()){}
 
             setPowerAll(0);
@@ -106,6 +128,8 @@ abstract class Parent extends OpMode {
             setPosAll(-pos, pos, -pos, pos);
 
             setPowerAll(pow);
+
+            setAllRun();
 
             while(topLeft.isBusy()){}
 
@@ -117,6 +141,8 @@ abstract class Parent extends OpMode {
             setPosAll(posLTRB,posRTLB,posRTLB,posLTRB);
 
             setPowerAll(powLTRB,powRTLB,powRTLB,powLTRB);
+
+            setAllRun();
 
             while(topLeft.isBusy() || topRight.isBusy() ){}
 

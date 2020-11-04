@@ -17,45 +17,45 @@ public class TeleOp extends OpMode {
     DcMotor bottomRight;
 
     CRServo frontArm, backArm;
+    CRServo armServo; /* the */
 
     DcMotor launcher;
     boolean on_off = false;
 
 
     public void init(){
-        topLeft = hardwareMap.dcMotor.get("Top left motor");
-        topRight = hardwareMap.dcMotor.get("Top right motor");
-        bottomLeft = hardwareMap.dcMotor.get("Bottom left motor");
-        bottomRight = hardwareMap.dcMotor.get("Bottom right motor");
+        topLeft = hardwareMap.dcMotor.get("topLeftMotor");
+        topRight = hardwareMap.dcMotor.get("topRightMotor");
+        bottomLeft = hardwareMap.dcMotor.get("bottomLeftMotor");
+        bottomRight = hardwareMap.dcMotor.get("bottomRightMotor");
 
         frontArm = hardwareMap.crservo.get("front arm");
         backArm = hardwareMap.crservo.get("back arm");
+        armServo = hardwareMap.crservo.get("arm servo");
 
-        launcher = hardwareMap.dcMotor.get("Launcher");
 
         topLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         topRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        launcher.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        topLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        topLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         topRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        bottomLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         frontArm.setDirection(CRServo.Direction.FORWARD);
-        backArm.setDirection(CRServo.Direction.FORWARD);
-
-        launcher.setDirection(DcMotorSimple.Direction.FORWARD);
+        backArm.setDirection(CRServo.Direction.REVERSE);
+        armServo.setDirection(CRServo.Direction.FORWARD);
 
         topLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        launcher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         topLeft.setPower(0);
         topRight.setPower(0);
@@ -64,10 +64,11 @@ public class TeleOp extends OpMode {
 
         backArm.setPower(0);
         frontArm.setPower(0);
+        armServo.setPower(0);
 
-        launcher.setPower(0);
+
     }
-
+/*
     public void change(){
         on_off = !on_off;
         if(!on_off)
@@ -75,7 +76,7 @@ public class TeleOp extends OpMode {
         else
             launcher.setPower(1);
     }
-
+*/
     public void loop() {
         topLeft.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
         topRight.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
@@ -85,10 +86,12 @@ public class TeleOp extends OpMode {
 
         backArm.setPower(gamepad2.left_stick_y);
         frontArm.setPower(gamepad2.left_stick_y);
+        armServo.setPower(gamepad2.right_stick_y);
 
 
-        if (gamepad1.a)
-            change();
+        if (gamepad1.a);
+            //change();
+
 
     }
 
