@@ -85,23 +85,23 @@ public abstract class Parent extends LinearOpMode {
             bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             topLeft.setTargetPosition(pos);
-            topRight.setTargetPosition(pos);
+            topRight.setTargetPosition(-pos);
             bottomLeft.setTargetPosition(pos);
-            bottomRight.setTargetPosition(pos);
+            bottomRight.setTargetPosition(-pos);
         }
 
         public void setPosAll(int posTL, int posTR, int posBL, int posBR){
             topLeft.setTargetPosition(posTL);
-            topRight.setTargetPosition(posTR);
+            topRight.setTargetPosition(-posTR);
             bottomLeft.setTargetPosition(posBL);
-            bottomRight.setTargetPosition(posBR);
+            bottomRight.setTargetPosition(-posBR);
         }
 
 
 
         public void fRbR(int pos, double pow){
 
-            setPosAll(pos, -pos, pos, -pos);
+            setPosAll(pos);
 
             setPowerAll(pow);
 
