@@ -2,15 +2,18 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDistance;
 
 public abstract class Parent extends LinearOpMode {
 
+    ElapsedTime time = new ElapsedTime();
 
     DcMotor topLeft;
     DcMotor topRight;
@@ -22,10 +25,10 @@ public abstract class Parent extends LinearOpMode {
     ColorRangeSensor colorRangeSensor;
     Servo servoLauncher;
 
-    Servo clawArm;
-    Servo clawElbow;
+    CRServo clawArm;
+    CRServo clawElbow;
 
-    Servo clawClaw;
+    CRServo clawClaw;
 
     public void initRobo(){
         topLeft = hardwareMap.dcMotor.get("topLeftMotor");
@@ -33,15 +36,23 @@ public abstract class Parent extends LinearOpMode {
         bottomLeft = hardwareMap.dcMotor.get("bottomLeftMotor");
         bottomRight = hardwareMap.dcMotor.get("bottomRightMotor");
 
+        clawArm = hardwareMap.crservo.get("front arm");
+        clawElbow = hardwareMap.crservo.get("back arm");
+        clawClaw = hardwareMap.crservo.get("arm servo");
+
         topLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         topRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         topLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        topRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        topRight.setDirection(DcMotorSimple.Direction.FORWARD);
         bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        bottomRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        clawElbow.setDirection(CRServo.Direction.FORWARD);
+        clawArm.setDirection(CRServo.Direction.FORWARD);
+        clawClaw.setDirection(CRServo.Direction.FORWARD);
 
         topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -52,6 +63,10 @@ public abstract class Parent extends LinearOpMode {
         topRight.setPower(0);
         bottomLeft.setPower(0);
         bottomRight.setPower(0);
+
+        clawClaw.setPower(0);
+        clawArm.setPower(0);
+        clawElbow.setPower(0);
 
         waitForStart();
         }
@@ -79,10 +94,6 @@ public abstract class Parent extends LinearOpMode {
         }
 
         public void setPosAll(int pos){
-            topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            bottomRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             topLeft.setTargetPosition(pos);
             topRight.setTargetPosition(-pos);
@@ -99,52 +110,39 @@ public abstract class Parent extends LinearOpMode {
 
 
 
-        public void fRbR(int pos, double pow){
-
-            setPosAll(pos);
+        public void fRbR(int time, double pow) throws InterruptedException{
 
             setPowerAll(pow);
 
-            setAllRun();
-
-            while(topLeft.isBusy()){}
+            Thread.sleep(time);
 
             setPowerAll(0);
         }
 
-        public void sideways(int pos, double pow){
-            setPosAll(pos, -pos, -pos, pos);
+        public void sideways(int time, double pow) throws InterruptedException{
 
-            setPowerAll(pow);
+            setPowerAll(pow, -pow, pow, pow);
 
-            setAllRun();
-
-            while(topLeft.isBusy()){}
+            Thread.sleep(time);
 
             setPowerAll(0);
         }
 
-        public void rotation(int pos, double pow){
-            setPosAll(-pos, pos, -pos, pos);
+        public void rotation(int time, double pow) throws InterruptedException{
 
-            setPowerAll(pow);
+            setPowerAll(pow, -pow, pow, -pow);
 
-            setAllRun();
-
-            while(topLeft.isBusy()){}
+            Thread.sleep(time);
 
             setPowerAll(0);
 
         }
 
-        public void diagonal(int posLTRB,int posRTLB,double powLTRB, double powRTLB){
-            setPosAll(posLTRB,posRTLB,posRTLB,posLTRB);
+        public void diagonal(int time, double powLTRB, double powRTLB) throws InterruptedException{
 
             setPowerAll(powLTRB,powRTLB,powRTLB,powLTRB);
 
-            setAllRun();
-
-            while(topLeft.isBusy() || topRight.isBusy() ){}
+            Thread.sleep(time);
 
             setPowerAll(0);
 

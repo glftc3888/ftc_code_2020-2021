@@ -50,7 +50,7 @@ public class TeleOp extends OpMode {
         backArm.setDirection(CRServo.Direction.REVERSE);
         armServo.setDirection(CRServo.Direction.FORWARD);
 
-        topLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -82,6 +82,9 @@ public class TeleOp extends OpMode {
         topRight.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
         bottomLeft.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
         bottomRight.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x);
+
+        telemetry.addData("top left ", topLeft.getCurrentPosition());
+        telemetry.addData("top right ", topRight.getCurrentPosition());
 
 
         backArm.setPower(gamepad2.left_stick_y);
