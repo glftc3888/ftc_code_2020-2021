@@ -148,6 +148,8 @@ public abstract class Parent extends LinearOpMode {
 
         }
 
+        //Hey Nathaniel, be sure to create a claw function for auto. swag poggers
+
     }
 
 
