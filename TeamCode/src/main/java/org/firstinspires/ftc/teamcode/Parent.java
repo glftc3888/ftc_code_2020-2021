@@ -49,7 +49,7 @@ public abstract class Parent extends LinearOpMode {
         bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        clawArm.setDirection(CRServo.Direction.FORWARD); //kinda from Tele-Op
+        clawArm.setDirection(CRServo.Direction.FORWARD);
         clawElbow.setDirection(CRServo.Direction.REVERSE);
         clawClaw.setDirection(CRServo.Direction.FORWARD);
 
