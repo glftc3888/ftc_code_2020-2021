@@ -148,8 +148,32 @@ public abstract class Parent extends LinearOpMode {
 
         }
 
-        //Hey Nathaniel, be sure to create a claw function for auto. swag poggers
+        public void moveClaw(double pow) throws InterruptedException{
+            clawElbow.setPower(pow);
+            clawArm.setPower(pow);
+        }
 
+        public void openClose(double pow) throws  InterruptedException{
+            clawClaw.setPower(pow);
+        }
+
+        public void moveOpen(int time, double pow) throws InterruptedException{
+            moveClaw(pow);
+
+            Thread.sleep(time);
+
+            moveClaw(0);
+
+            openClose(1);
+
+            Thread.sleep(1000);
+
+            openClose(-1);
+
+            Thread.sleep(1000);
+
+            openClose(0);
+        }
     }
 
 

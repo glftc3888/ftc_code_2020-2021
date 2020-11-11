@@ -10,12 +10,8 @@ public class Auto_1 extends Parent {
             waitForStart();
             fRbR(1700, -.125);
             fRbR(500, 0);
-            rotation(1300, -.0625);
-            rotation(550, -.05);
-            rotation(1000,0);
-            diagonal(1000, -.125, -.125);
-            // sideways(-200,.25);
-
+            rotation(1500, -.0625);
+            moveOpen(3500, 1);
         }
 
 }
