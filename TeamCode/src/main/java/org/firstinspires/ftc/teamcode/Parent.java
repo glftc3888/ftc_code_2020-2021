@@ -27,7 +27,6 @@ public abstract class Parent extends LinearOpMode {
 
     CRServo clawArm;
     CRServo clawElbow;
-
     CRServo clawClaw;
 
     public void initRobo(){
@@ -50,8 +49,8 @@ public abstract class Parent extends LinearOpMode {
         bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        clawElbow.setDirection(CRServo.Direction.FORWARD);
-        clawArm.setDirection(CRServo.Direction.FORWARD);
+        clawArm.setDirection(CRServo.Direction.FORWARD); //kinda from Tele-Op
+        clawElbow.setDirection(CRServo.Direction.REVERSE);
         clawClaw.setDirection(CRServo.Direction.FORWARD);
 
         topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -84,6 +83,9 @@ public abstract class Parent extends LinearOpMode {
             topRight.setPower(pow);
             bottomLeft.setPower(pow);
             bottomRight.setPower(pow);
+            clawArm.setPower(pow);
+            clawElbow.setPower(pow);
+            clawClaw.setPower(pow);
         }
 
         public void setPowerAll(double powTL, double powTR, double powBL, double powBR){
@@ -93,8 +95,13 @@ public abstract class Parent extends LinearOpMode {
             bottomRight.setPower(powBR);
         }
 
-        public void setPosAll(int pos){
+        public void setPowerAllClaw(double powCA, double powCE, double powCC){
+            clawArm.setPower(powCA);
+            clawElbow.setPower(powCE);
+            clawClaw.setPower(powCC);
+        }
 
+        public void setPosAll(int pos){
             topLeft.setTargetPosition(pos);
             topRight.setTargetPosition(-pos);
             bottomLeft.setTargetPosition(pos);
@@ -135,7 +142,6 @@ public abstract class Parent extends LinearOpMode {
             Thread.sleep(time);
 
             setPowerAll(0);
-
         }
 
         public void diagonal(int time, double powLTRB, double powRTLB) throws InterruptedException{
@@ -145,35 +151,19 @@ public abstract class Parent extends LinearOpMode {
             Thread.sleep(time);
 
             setPowerAll(0);
-
         }
 
-        public void moveClaw(double pow) throws InterruptedException{
-            clawElbow.setPower(pow);
-            clawArm.setPower(pow);
-        }
+        //Hey Nathaniel, be sure to create a claw function for auto. swag poggers
+        public void clawMove(int time, double pow) throws InterruptedException{
 
-        public void openClose(double pow) throws  InterruptedException{
-            clawClaw.setPower(pow);
-        }
-
-        public void moveOpen(int time, double pow) throws InterruptedException{
-            moveClaw(pow);
+            setPowerAllClaw(pow, pow, pow);
 
             Thread.sleep(time);
 
-            moveClaw(0);
-
-            openClose(1);
-
-            Thread.sleep(1000);
-
-            openClose(-1);
-
-            Thread.sleep(1000);
-
-            openClose(0);
+            setPowerAll(0);
         }
+        // Yes there will be errors, but i made this during my freetime -AA
+
     }
 
 
