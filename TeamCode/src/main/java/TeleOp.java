@@ -53,7 +53,7 @@ public class TeleOp extends OpMode {
         backArm.setDirection(CRServo.Direction.REVERSE);
         armServo.setDirection(CRServo.Direction.FORWARD);
 
-        topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        topLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

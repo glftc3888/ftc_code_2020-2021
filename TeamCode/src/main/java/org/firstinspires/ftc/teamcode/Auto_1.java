@@ -7,11 +7,11 @@ import com.qualcomm.robotcore.hardware.CRServo;
 public class Auto_1 extends Parent {
     public void runOpMode() throws InterruptedException {
             initRobo();
-            waitForStart();
             fRbR(1700, -.125);
             fRbR(500, 0);
             rotation(1500, -.0625);
-            moveOpen(3500, 1);
+            moveOpen(2000, -1);
+            clawMove(1000,1);
         }
 
 }

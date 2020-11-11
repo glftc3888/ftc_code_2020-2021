@@ -63,7 +63,7 @@ public abstract class Parent extends LinearOpMode {
         bottomLeft.setPower(0);
         bottomRight.setPower(0);
 
-        clawClaw.setPower(0);
+        clawClaw.setPower(1);
         clawArm.setPower(0);
         clawElbow.setPower(0);
 
