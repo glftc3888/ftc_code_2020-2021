@@ -12,18 +12,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.sql.Time;
-
+/*
 public class OdometryCordPos extends Runnable {
 
     private DcMotor xAxis, yAxis;
 
     double xAxisPos = 0, yAxisPos = 0, changeInRobotOrientation = 0;
-    ;
+
 
     double xAxisX, yAxisY;
 
     double prevX, prevY;
-    ;
+
 
     private int xAxisPosMulti = 1, yAxisPosMulti = 1;
 
@@ -84,3 +84,4 @@ public class OdometryCordPos extends Runnable {
 
 
 }
+ */

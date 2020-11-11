@@ -10,7 +10,7 @@ public class auto_2 extends Parent{
         waitForStart();
         fRbR(2100, -.125);
         fRbR(500, 0);
-        moveOpen(5000, 1);
+        moveOpen(5000, -1);
         fRbR(800,.125);
     }
 }

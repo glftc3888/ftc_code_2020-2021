@@ -83,9 +83,6 @@ public abstract class Parent extends LinearOpMode {
             topRight.setPower(pow);
             bottomLeft.setPower(pow);
             bottomRight.setPower(pow);
-            clawArm.setPower(pow);
-            clawElbow.setPower(pow);
-            clawClaw.setPower(pow);
         }
 
         public void setPowerAll(double powTL, double powTR, double powBL, double powBR){
@@ -95,11 +92,6 @@ public abstract class Parent extends LinearOpMode {
             bottomRight.setPower(powBR);
         }
 
-        public void setPowerAllClaw(double powCA, double powCE, double powCC){
-            clawArm.setPower(powCA);
-            clawElbow.setPower(powCE);
-            clawClaw.setPower(powCC);
-        }
 
         public void setPosAll(int pos){
             topLeft.setTargetPosition(pos);
@@ -153,17 +145,31 @@ public abstract class Parent extends LinearOpMode {
             setPowerAll(0);
         }
 
-        //Hey Nathaniel, be sure to create a claw function for auto. swag poggers
-        public void clawMove(int time, double pow) throws InterruptedException{
-
-            setPowerAllClaw(pow, pow, pow);
+       public void clawMove(int time, double pow) throws InterruptedException{
+            clawArm.setPower(pow);
+            clawElbow.setPower(pow);
 
             Thread.sleep(time);
 
-            setPowerAll(0);
-        }
-        // Yes there will be errors, but i made this during my freetime -AA
+            clawArm.setPower(0);
+            clawElbow.setPower(0);
+       }
 
+       public void openClose(double pow) throws InterruptedException{
+            clawClaw.setPower(pow);
+
+            Thread.sleep(1000);
+
+            clawClaw.setPower(0);
+       }
+
+       public void moveOpen(int time, double pow) throws InterruptedException{
+            clawMove(time, pow);
+
+            openClose(1);
+
+            openClose(-1);
+       }
     }
 
 

@@ -11,7 +11,7 @@ public class Auto_1 extends Parent {
             fRbR(1700, -.125);
             fRbR(500, 0);
             rotation(1500, -.0625);
-            moveOpen(3500, 1);
+            moveOpen(3500, -1);
         }
 
 }
