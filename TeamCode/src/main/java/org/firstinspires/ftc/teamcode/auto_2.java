@@ -7,7 +7,10 @@ public class auto_2 extends Parent{
 
     public void runOpMode() throws InterruptedException {
         initRobo();
-        waitForStart();
-        fRbR(1500, .25);
+        fRbR(2100, -.125);
+        fRbR(500, 0);
+        moveOpen(2000, -1);
+        clawMove(1000,1);
+        fRbR(800,.125);
     }
 }

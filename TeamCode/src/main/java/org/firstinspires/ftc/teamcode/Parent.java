@@ -27,7 +27,6 @@ public abstract class Parent extends LinearOpMode {
 
     CRServo clawArm;
     CRServo clawElbow;
-
     CRServo clawClaw;
 
     public void initRobo(){
@@ -50,8 +49,8 @@ public abstract class Parent extends LinearOpMode {
         bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        clawElbow.setDirection(CRServo.Direction.FORWARD);
         clawArm.setDirection(CRServo.Direction.FORWARD);
+        clawElbow.setDirection(CRServo.Direction.REVERSE);
         clawClaw.setDirection(CRServo.Direction.FORWARD);
 
         topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -64,7 +63,7 @@ public abstract class Parent extends LinearOpMode {
         bottomLeft.setPower(0);
         bottomRight.setPower(0);
 
-        clawClaw.setPower(0);
+        clawClaw.setPower(1);
         clawArm.setPower(0);
         clawElbow.setPower(0);
 
@@ -93,8 +92,8 @@ public abstract class Parent extends LinearOpMode {
             bottomRight.setPower(powBR);
         }
 
-        public void setPosAll(int pos){
 
+        public void setPosAll(int pos){
             topLeft.setTargetPosition(pos);
             topRight.setTargetPosition(-pos);
             bottomLeft.setTargetPosition(pos);
@@ -135,7 +134,6 @@ public abstract class Parent extends LinearOpMode {
             Thread.sleep(time);
 
             setPowerAll(0);
-
         }
 
         public void diagonal(int time, double powLTRB, double powRTLB) throws InterruptedException{
@@ -145,9 +143,33 @@ public abstract class Parent extends LinearOpMode {
             Thread.sleep(time);
 
             setPowerAll(0);
-
         }
 
+       public void clawMove(int time, double pow) throws InterruptedException{
+            clawArm.setPower(pow);
+            clawElbow.setPower(pow);
+
+            Thread.sleep(time);
+
+            clawArm.setPower(0);
+            clawElbow.setPower(0);
+       }
+
+       public void openClose(double pow) throws InterruptedException{
+            clawClaw.setPower(pow);
+
+            Thread.sleep(1000);
+
+            clawClaw.setPower(0);
+       }
+
+       public void moveOpen(int time, double pow) throws InterruptedException{
+            clawMove(time, pow);
+
+            openClose(1);
+
+            openClose(-1);
+       }
     }
 
 

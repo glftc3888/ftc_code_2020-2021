@@ -2,8 +2,8 @@
   <library name="Gradle: org.firstinspires.ftc:Blocks:5.5@aar">
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a433c8e60cf48d59fa4ca1f5f8d42f25/jetified-Blocks-5.5/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a433c8e60cf48d59fa4ca1f5f8d42f25/jetified-Blocks-5.5/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a433c8e60cf48d59fa4ca1f5f8d42f25/jetified-Blocks-5.5/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/a433c8e60cf48d59fa4ca1f5f8d42f25/jetified-Blocks-5.5/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Blocks/5.5/8782e205c1e1ab131c8e3044afd71653ee3d3913/Blocks-5.5-javadoc.jar!/" />
