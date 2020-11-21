@@ -5,15 +5,15 @@ import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.teamcode.Parent;
 
-@Autonomous(group = "autonomous", name = "b")
+@Autonomous(name = "Auto_swag1", group = "autonomous")
 public class Auto_1 extends Parent {
+
     public void runOpMode() throws InterruptedException {
             initRobo();
             fRbR(1700, -.125);
             fRbR(500, 0);
             rotation(1500, -.0625);
-            moveOpen(2000, -1);
-            clawMove(1000,1);
+            moveGrip(0);
         }
 
 }

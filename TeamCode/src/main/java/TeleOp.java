@@ -34,8 +34,9 @@ public class TeleOp extends OpMode {
         topRight = hardwareMap.dcMotor.get("topRightMotor");
         bottomLeft = hardwareMap.dcMotor.get("bottomLeftMotor");
         bottomRight = hardwareMap.dcMotor.get("bottomRightMotor");
-        intake = hardwareMap.dcMotor.get("intake");
-        launch = hardwareMap.dcMotor.get("launch");
+        //intake = hardwareMap.dcMotor.get("intake");
+        //launch = hardwareMap.dcMotor.get("launch");
+
 
         clawGrab = hardwareMap.servo.get("grab");
         wrist = hardwareMap.crservo.get("wrist");
@@ -47,8 +48,9 @@ public class TeleOp extends OpMode {
         topRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        launch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //launch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
 
@@ -56,9 +58,10 @@ public class TeleOp extends OpMode {
         topRight.setDirection(DcMotorSimple.Direction.FORWARD);
         bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        /*
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
         launch.setDirection(DcMotorSimple.Direction.FORWARD);
-
+        */
 
         clawGrab.setDirection(Servo.Direction.FORWARD);
         wrist.setDirection(CRServo.Direction.FORWARD);
@@ -76,6 +79,8 @@ public class TeleOp extends OpMode {
         topRight.setPower(0);
         bottomLeft.setPower(0);
         bottomRight.setPower(0);
+       // intake.setPower(0);
+        //launch.setPower(0);
 
 
         rAP.setPower(0);
@@ -83,15 +88,8 @@ public class TeleOp extends OpMode {
 
 
     }
-/*
-    public void change(){
-        on_off = !on_off;
-        if(!on_off)
-            launcher.setPower(0);
-        else
-            launcher.setPower(1);
-    }
-*/
+
+
     public void loop() {
         telemetry.addData("top left ", topLeft.getCurrentPosition());
         telemetry.addData("top right ", topRight.getCurrentPosition());
@@ -111,6 +109,7 @@ public class TeleOp extends OpMode {
         if(gamepad2.b)
             clawGrab.setPosition(1);
         wrist.setPower(gamepad2.left_stick_x);
+        /*
             launch.setPower(gamepad2.right_trigger);
             while(gamepad2.left_trigger==1){
                 fPin.setPosition(1);
@@ -118,8 +117,7 @@ public class TeleOp extends OpMode {
             }
             fPin.setPosition(0);
             intake.setPower(gamepad2.left_trigger);
-
-
+*/
 
 
 
