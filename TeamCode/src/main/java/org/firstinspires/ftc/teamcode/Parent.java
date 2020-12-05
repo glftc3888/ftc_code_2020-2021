@@ -19,6 +19,8 @@ public abstract class Parent extends LinearOpMode {
     DcMotor topRight;
     DcMotor bottomLeft;
     DcMotor bottomRight;
+    DcMotor intake;
+    DcMotor launch;
     SensorREVColorDistance frontSensor;
 
 
@@ -35,6 +37,8 @@ public abstract class Parent extends LinearOpMode {
         topRight = hardwareMap.dcMotor.get("topRightMotor");
         bottomLeft = hardwareMap.dcMotor.get("bottomLeftMotor");
         bottomRight = hardwareMap.dcMotor.get("bottomRightMotor");
+        intake = hardwareMap.dcMotor.get("intake");
+        launch = hardwareMap.dcMotor.get("launch");
 
         clawGrab = hardwareMap.servo.get("grab");
         wrist = hardwareMap.crservo.get("wrist");
@@ -45,11 +49,15 @@ public abstract class Parent extends LinearOpMode {
         topRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        launch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         topLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         topRight.setDirection(DcMotorSimple.Direction.FORWARD);
         bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
+        launch.setDirection(DcMotorSimple.Direction.FORWARD);
 
         clawGrab.setDirection(Servo.Direction.FORWARD);
         wrist.setDirection(CRServo.Direction.FORWARD);
@@ -65,9 +73,13 @@ public abstract class Parent extends LinearOpMode {
         topRight.setPower(0);
         bottomLeft.setPower(0);
         bottomRight.setPower(0);
+        launch.setPower(0);
+
 
         rAP.setPower(0);
         wrist.setPower(0);
+
+        fPin.setPosition(1); //poggers XD
 
         waitForStart();
     }
@@ -166,5 +178,18 @@ public abstract class Parent extends LinearOpMode {
         clawGrab.setPosition(pos);
 
         Thread.sleep(1000);
+    }
+
+    public void deployLauncher(double pow, int time) throws InterruptedException {
+        launch.setPower(pow);
+
+        Thread.sleep(time);
+    }
+
+    public void startIntake(double pow, double pos, int time) throws InterruptedException {
+        intake.setPower(pow);
+        fPin.setPosition(pos);
+
+        Thread.sleep(time);
     }
 }

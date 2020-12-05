@@ -8,7 +8,7 @@ public class auto_2 extends Parent{
     public void runOpMode() throws InterruptedException {
         initRobo();
         fRbR(2100, -.125);
-        fRbR(500, 0);
+        sideways(500, -.125);
         moveGrip(0);
         fRbR(800,.125);
     }
