@@ -87,6 +87,11 @@ public class TeleOp extends OpMode {
 
         rAP.setPower(0);
         wrist.setPower(0);
+        fPin.setPosition(1);
+
+        topRight.setMode(bottomLeft.getMode());
+        topLeft.setMode(bottomLeft.getMode());
+        bottomRight.setMode(bottomLeft.getMode());
     }
 
 
@@ -107,12 +112,17 @@ public class TeleOp extends OpMode {
         }
 
         //Normal Movement
-        topLeft.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * .25);
-        topRight.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * .25);
-        bottomLeft.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * .25);
-        bottomRight.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x) * .25);
 
-        //Rack and pinion movement
+        topLeft.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * .5);
+        topRight.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * .5);
+        bottomLeft.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * .5);
+        bottomRight.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x) * .5);
+
+
+
+
+
+
         rAP.setPower(-gamepad2.left_stick_y);
 
         //Claw Movement
@@ -133,8 +143,10 @@ public class TeleOp extends OpMode {
             intake.setPower(-1);
 
         //Servo that moves the disc into the launcher
-        pinPower = gamepad2.right_bumper ? 1 : 0;
-        fPin.setPosition(pinPower);
+        if(gamepad2.right_bumper)
+            fPin.setPosition(0);
+        else
+            fPin.setPosition(1);
 
     }
 
