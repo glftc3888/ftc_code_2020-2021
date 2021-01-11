@@ -1,19 +1,23 @@
- package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.teamcode.Parent;
 
-@Autonomous(name = "Auto_1", group = "autonomous")
+@Autonomous(name = "Wobble_1", group = "autonomous")
 public class Auto_1 extends Parent {
 
     public void runOpMode() throws InterruptedException {
             initRobo();
-            fRbR(1700, -.125);
-            rotation(1500, -.0625);
+            // Move bot to the first box
+            fRbR(1750, -.05);
+            fRbR(1550,-.025);
+            fRbR(1000, 0);
+            // Moves arm and claw
+            moveRacPin(2500, -1);
+            moveWrist(1000, -1);
             moveGrip(0);
-            rotation(1500, -.0625);
-        }
+    }
 
 }
