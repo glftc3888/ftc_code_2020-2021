@@ -30,6 +30,8 @@ public class TeleOp extends OpMode {
     CRServo rAP;
     CRServo wrist;
 
+    BNO055IMU Gyro;
+
 
     double powerBase;
     boolean on_off = false;
@@ -117,7 +119,7 @@ public class TeleOp extends OpMode {
         
         telemetry.addData("top left ", topLeft.getCurrentPosition());
         telemetry.addData("top right ", topRight.getCurrentPosition());
-        telemetry.addData("current gyro angle "
+        telemetry.addData("current gyro angle ", Gyro.getPosition().z);
 
         //Turbo
         if(gamepad1.right_trigger == 1) {

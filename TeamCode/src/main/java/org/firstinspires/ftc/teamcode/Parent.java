@@ -58,6 +58,8 @@ public abstract class Parent extends LinearOpMode {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         Gyro.initialize(parameters);
+        telemetry.addData("Calibrating Gyro: ", Gyro.getCalibrationStatus().toString());
+        telemetry.addData("Gyro ready?: ", Gyro.isGyroCalibrated());
 
 
         topLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -235,36 +237,45 @@ public abstract class Parent extends LinearOpMode {
     public void returnfPin() throws InterruptedException {
         fPin.setPosition(0.5);
     }
-    public void turnHeading(double angle, int time) throws InterruptedException{
-        if(angle > Gyro.getAngularOrientation().firstAngle){
-            topLeft.setPower(-0.0625);
-            topRight.setPower(0.0625);
-            bottomLeft.setPower(-0.0625);
-            bottomRight.setPower(0.0625);
-            if(angle == Gyro.getAngularOrientation().firstAngle){
-                telemetry.addData("Current angle", Gyro.getAngularOrientation().firstAngle);
-                topLeft.setPower(0);
-                topRight.setPower(0);
-                bottomLeft.setPower(0);
-                bottomRight.setPower(0);
-            }
+    public boolean isAngleInRange(double angle){
+        double roughSuperAngle = angle + 0.25;
+        double roughSubAngle = angle - 0.25;
+        if(roughSubAngle < Gyro.getPosition().z && Gyro.getPosition().z < roughSuperAngle){
+            return true;
         }
-        else if(angle < Gyro.getAngularOrientation().firstAngle){
-            topLeft.setPower(0.0625);
-            topRight.setPower(-0.0625);
-            bottomLeft.setPower(0.0625);
-            bottomRight.setPower(-0.0625);
-            if(angle == Gyro.getAngularOrientation().firstAngle){
-                telemetry.addData("Current angle", Gyro.getAngularOrientation().firstAngle);
-                topLeft.setPower(0);
-                topRight.setPower(0);
-                bottomLeft.setPower(0);
-                bottomRight.setPower(0);
-            }
+        else{
+            return false;
         }
-        }
-
     }
+    public void turnHeading(double angle, int time) throws InterruptedException{
+        while (!isAngleInRange(angle) && opModeIsActive()){
+            if(angle > Math.abs(Gyro.getAngularOrientation().firstAngle)){
+                topLeft.setPower(-0.05);
+                topRight.setPower(0.05);
+                bottomLeft.setPower(-0.05);
+                bottomRight.setPower(0.05);
+                telemetry.addData("Currently buffering, position :", Gyro.getAngularOrientation().firstAngle);
+                if (isAngleInRange(angle)) {
+                    break;
+                }
+            }
+            else if(angle < Math.abs(Gyro.getAngularOrientation().firstAngle)){
+                topLeft.setPower(0.05);
+                topRight.setPower(-0.05);
+                bottomLeft.setPower(0.05);
+                bottomRight.setPower(-0.05);
+                telemetry.addData("Currently buffering, position :", Gyro.getAngularOrientation().firstAngle);
+                if (isAngleInRange(angle)) {
+                    break;
+                }
+            }
+            else{
+                break;
+            }
+        }
+    }
+
+}
 
     /*
     public double getAngle(double angle){
