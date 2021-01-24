@@ -10,7 +10,7 @@ public class GyroTest extends Parent {
 
     public void runOpMode() throws InterruptedException {
         initRobo();
-        turnHeading(90,5000);
+        turnHeading(90);
 
 
     }

@@ -106,6 +106,7 @@ public abstract class Parent extends LinearOpMode {
         launchRight.setPower(0);
 
         fPin.setPosition(0.5);
+        clawGrab.setPosition(1);
 
         topRight.setMode(bottomLeft.getMode());
         topLeft.setMode(bottomLeft.getMode());
@@ -223,6 +224,7 @@ public abstract class Parent extends LinearOpMode {
     public void deployLauncher(double pow, int time) throws InterruptedException {
         launchLeft.setPower(pow*powerBase);
         launchRight.setPower(pow*powerBase);
+        Thread.sleep(1000);
         fPin.setPosition(-0.5);
         Thread.sleep(time);
         returnfPin();
@@ -247,7 +249,7 @@ public abstract class Parent extends LinearOpMode {
             return false;
         }
     }
-    public void turnHeading(double angle, int time) throws InterruptedException{
+    public void turnHeading(double angle) throws InterruptedException{
         while (!isAngleInRange(angle) && opModeIsActive()){
             if(angle > Math.abs(Gyro.getAngularOrientation().firstAngle)){
                 topLeft.setPower(-0.05);
@@ -274,6 +276,7 @@ public abstract class Parent extends LinearOpMode {
             }
         }
     }
+
 
 }
 

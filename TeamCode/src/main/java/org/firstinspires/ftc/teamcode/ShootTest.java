@@ -9,12 +9,16 @@ public class ShootTest extends Parent{
     public void runOpMode() throws InterruptedException {
         initRobo();
         powerBase = 12/this.hardwareMap.voltageSensor.iterator().next().getVoltage();
+
         deployLauncher(1,2000);
         Thread.sleep(2000);
         deployLauncher(1,2000);
         Thread.sleep(2000);
         deployLauncher(1,2000);
         //YAY
+
+
+
 
     }
 }

@@ -24,14 +24,16 @@ abstract public class Parent2 extends LinearOpMode {
 
     ElapsedTime time = new ElapsedTime();
 
-    //DT
     DcMotor topLeft;
     DcMotor topRight;
     DcMotor bottomLeft;
     DcMotor bottomRight;
     DcMotor intake;
     SensorREVColorDistance frontSensor;
+    BNO055IMU Gyro;
 
+    DcMotor launchLeft;
+    DcMotor launchRight;
 
     ColorRangeSensor colorRangeSensor;
     Servo servoLauncher;
@@ -40,12 +42,8 @@ abstract public class Parent2 extends LinearOpMode {
     Servo fPin;
     CRServo rAP;
     CRServo wrist;
+    double powerBase;
 
-    //Gyro
-    BNO055IMU imu;
-    Orientation angles;
-
-    //initalizes Robot
     public void initRobo() {
         topLeft = hardwareMap.dcMotor.get("topLeftMotor");
         topRight = hardwareMap.dcMotor.get("topRightMotor");
@@ -53,10 +51,23 @@ abstract public class Parent2 extends LinearOpMode {
         bottomRight = hardwareMap.dcMotor.get("bottomRightMotor");
         intake = hardwareMap.dcMotor.get("intake");
 
+        launchLeft = hardwareMap.dcMotor.get("launchLeftMotor");
+        launchRight = hardwareMap.dcMotor.get("launchRightMotor");
+
         clawGrab = hardwareMap.servo.get("grab");
         wrist = hardwareMap.crservo.get("wrist");
         rAP = hardwareMap.crservo.get("rAP");
         fPin = hardwareMap.servo.get("fPin");
+
+
+        Gyro = hardwareMap.get(BNO055IMU.class, "Gyro");
+        Orientation orient = new Orientation();
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        Gyro.initialize(parameters);
+        telemetry.addData("Calibrating Gyro: ", Gyro.getCalibrationStatus().toString());
+        telemetry.addData("Gyro ready?: ", Gyro.isGyroCalibrated());
+
 
         topLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         topRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -64,16 +75,22 @@ abstract public class Parent2 extends LinearOpMode {
         bottomRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        topLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        topRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        topLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        topRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        bottomLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        bottomRight.setDirection(DcMotorSimple.Direction.REVERSE);
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        launchLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        launchRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         clawGrab.setDirection(Servo.Direction.FORWARD);
         wrist.setDirection(CRServo.Direction.FORWARD);
         rAP.setDirection(CRServo.Direction.FORWARD);
         fPin.setDirection(Servo.Direction.FORWARD);
+
+        launchLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        launchRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -85,14 +102,25 @@ abstract public class Parent2 extends LinearOpMode {
         bottomLeft.setPower(0);
         bottomRight.setPower(0);
 
+        launchLeft.setPower(0);
+        launchRight.setPower(0);
+
 
         rAP.setPower(0);
         wrist.setPower(0);
 
-        fPin.setPosition(0.5);
+        launchLeft.setPower(0);
+        launchRight.setPower(0);
 
-        bottomLeft.setMode(topLeft.getMode());
-        bottomRight.setMode(topRight.getMode());
+        fPin.setPosition(0.5);
+        clawGrab.setPosition(1);
+
+        topRight.setMode(bottomLeft.getMode());
+        topLeft.setMode(bottomLeft.getMode());
+        bottomRight.setMode(bottomLeft.getMode());
+
+        launchLeft.setMode(launchRight.getMode());
+        powerBase = 12/this.hardwareMap.voltageSensor.iterator().next().getVoltage();
         waitForStart();
 
     }
@@ -104,14 +132,17 @@ abstract public class Parent2 extends LinearOpMode {
         topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bottomLeft.setMode(topLeft.getMode());
-        bottomRight.setMode(topRight.getMode());
+
 
         topLeft.setTargetPosition(-distance);
         topRight.setTargetPosition(-distance);
+        bottomLeft.setTargetPosition(-distance);
+        bottomRight.setTargetPosition(-distance);
 
         topLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         topRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         topRight.setPower(power);
         topLeft.setPower(-power);
@@ -136,11 +167,13 @@ abstract public class Parent2 extends LinearOpMode {
 
         topLeft.setTargetPosition(distance);
         topRight.setTargetPosition(-distance);
-
+        bottomLeft.setTargetPosition(-distance);
+        bottomRight.setTargetPosition(distance);
 
         topLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         topRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        bottomLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         topRight.setPower(power);
         topLeft.setPower(-power);
@@ -152,10 +185,12 @@ abstract public class Parent2 extends LinearOpMode {
 
         }
 
+
         topRight.setPower(0);
         topLeft.setPower(0);
         bottomRight.setPower(0);
         bottomLeft.setPower(0);
+
     }
 
     // turns,
@@ -167,11 +202,13 @@ abstract public class Parent2 extends LinearOpMode {
 
         topLeft.setTargetPosition(-distance);
         topRight.setTargetPosition(distance);
-
+        bottomLeft.setTargetPosition(-distance);
+        bottomRight.setTargetPosition(distance);
 
         topLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         topRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        bottomLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bottomRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         topRight.setPower(-power);
         topLeft.setPower(power);
@@ -185,4 +222,20 @@ abstract public class Parent2 extends LinearOpMode {
         bottomRight.setPower(0);
         bottomLeft.setPower(0);
     }
+    public void moveRacPin(int time, double pow) throws InterruptedException {
+        rAP.setPower(-pow);
+
+        Thread.sleep(time);
+
+        rAP.setPower(0);
     }
+
+    public void moveWrist(int time, double pow) throws InterruptedException {
+        wrist.setPower(pow);
+
+        Thread.sleep(time);
+
+        wrist.setPower(0);
+    }
+
+}

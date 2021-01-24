@@ -22,7 +22,7 @@ public class TeleOp extends OpMode {
     DcMotor intake;
     DcMotor launchLeft;
     DcMotor launchRight;
-    //DcMotor reinforceLaunch;
+    BNO055IMU Gyro;
 
 
     Servo clawGrab;
@@ -30,13 +30,13 @@ public class TeleOp extends OpMode {
     CRServo rAP;
     CRServo wrist;
 
-    BNO055IMU Gyro;
 
 
     double powerBase;
     boolean on_off = false;
     int pinPower;
     int intakePower;
+    double max =0.8;
 
     public void init(){
         topLeft = hardwareMap.dcMotor.get("topLeftMotor");
@@ -46,7 +46,7 @@ public class TeleOp extends OpMode {
         intake = hardwareMap.dcMotor.get("intake");
         launchLeft = hardwareMap.dcMotor.get("launchLeftMotor");
         launchRight = hardwareMap.dcMotor.get("launchRightMotor");
-
+        Gyro = hardwareMap.get(BNO055IMU.class, "Gyro");
 
 
 
@@ -63,8 +63,8 @@ public class TeleOp extends OpMode {
         bottomRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        launchLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        launchRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        launchLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        launchRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
 
         topLeft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -88,9 +88,9 @@ public class TeleOp extends OpMode {
 
 
         topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        topRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        bottomLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        bottomRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bottomLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bottomRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
 
@@ -114,13 +114,22 @@ public class TeleOp extends OpMode {
 
 
     public void loop() {
+        telemetry.addData("ETL", topLeft.getCurrentPosition());
+        telemetry.addData("ETR",topRight.getCurrentPosition());
+        telemetry.addData("EBL",bottomLeft.getCurrentPosition());
+        telemetry.addData("EBR",bottomRight.getCurrentPosition());
         powerBase = 12/this.hardwareMap.voltageSensor.iterator().next().getVoltage();
         double inmax = 0.75;
-        
+        if(gamepad2.y)
+            max = 0.555555555555555555555555555555;
+        if(gamepad2.x)
+            max = 0.80;
+        telemetry.addData("max",max);
+
         telemetry.addData("top left ", topLeft.getCurrentPosition());
         telemetry.addData("top right ", topRight.getCurrentPosition());
         telemetry.addData("current gyro angle ", Gyro.getPosition().z);
-
+        telemetry.update();
         //Turbo
         if(gamepad1.right_trigger == 1) {
             topLeft.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
@@ -139,8 +148,6 @@ public class TeleOp extends OpMode {
         topRight.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x) * .5);
         bottomLeft.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * .5);
         bottomRight.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * .5);
-
-
 
 
 
@@ -165,6 +172,10 @@ public class TeleOp extends OpMode {
 
         launchLeft.setPower(gamepad2.right_trigger*powerBase);
         launchRight.setPower(gamepad2.right_trigger*powerBase);
+        if(launchLeft.getPower()>max*powerBase){
+            launchLeft.setPower(max*powerBase);
+            launchRight.setPower(max*powerBase);
+        }
 
         intake.setPower(gamepad1.left_trigger);
         if(intake.getPower()>inmax)

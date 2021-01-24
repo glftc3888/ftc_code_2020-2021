@@ -10,10 +10,10 @@ public class EncoderTest extends Parent2 {
 
     public void runOpMode() throws InterruptedException {
         initRobo();
-        move(0.8,1500);
-        moveSideways(0.8,1500);
-        move(-0.8,-1500);
-        moveSideways(-0.8,-1500);
+        move(0.1,500);
+        moveSideways(0.1,500);
+        move(-0.1,-500);
+        moveSideways(-0.1,-500);
         turn(1, 2000);
         turn(0.5,500);
         wait(2000);
