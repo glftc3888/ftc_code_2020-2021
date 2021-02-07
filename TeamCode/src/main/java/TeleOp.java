@@ -1,4 +1,5 @@
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -22,7 +23,7 @@ public class TeleOp extends OpMode {
     DcMotor intake;
     DcMotor launchLeft;
     DcMotor launchRight;
-    BNO055IMU Gyro;
+    //DcMotor reinforceLaunch;
 
 
     Servo clawGrab;
@@ -30,13 +31,14 @@ public class TeleOp extends OpMode {
     CRServo rAP;
     CRServo wrist;
 
+    RevColorSensorV3 tSense;
+    RevColorSensorV3 bSense;
 
 
     double powerBase;
     boolean on_off = false;
     int pinPower;
     int intakePower;
-    double max =0.8;
 
     public void init(){
         topLeft = hardwareMap.dcMotor.get("topLeftMotor");
@@ -46,9 +48,10 @@ public class TeleOp extends OpMode {
         intake = hardwareMap.dcMotor.get("intake");
         launchLeft = hardwareMap.dcMotor.get("launchLeftMotor");
         launchRight = hardwareMap.dcMotor.get("launchRightMotor");
-        Gyro = hardwareMap.get(BNO055IMU.class, "Gyro");
 
 
+        tSense = hardwareMap.get(RevColorSensorV3.class, "tSense");
+        bSense = hardwareMap.get(RevColorSensorV3.class, "bSense");
 
 
         clawGrab = hardwareMap.servo.get("grab");
@@ -63,8 +66,8 @@ public class TeleOp extends OpMode {
         bottomRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        launchLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        launchRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        launchLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        launchRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         topLeft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -78,14 +81,16 @@ public class TeleOp extends OpMode {
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
         launchLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         launchRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        //reinforceLaunch.setDirection(DcMotorSimple.Direction.REVERSE);
 
         clawGrab.setDirection(Servo.Direction.FORWARD);
         wrist.setDirection(CRServo.Direction.FORWARD);
         rAP.setDirection(CRServo.Direction.FORWARD);
         fPin.setDirection(Servo.Direction.FORWARD);
 
-
+        topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bottomRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -114,22 +119,16 @@ public class TeleOp extends OpMode {
 
 
     public void loop() {
-        telemetry.addData("ETL", topLeft.getCurrentPosition());
-        telemetry.addData("ETR",topRight.getCurrentPosition());
-        telemetry.addData("EBL",bottomLeft.getCurrentPosition());
-        telemetry.addData("EBR",bottomRight.getCurrentPosition());
         powerBase = 12/this.hardwareMap.voltageSensor.iterator().next().getVoltage();
         double inmax = 0.75;
-        if(gamepad2.y)
-            max = 0.555555555555555555555555555555;
-        if(gamepad2.x)
-            max = 0.80;
-        telemetry.addData("max",max);
+        
+        telemetry.addData("top left encoder", topLeft.getCurrentPosition());
+        telemetry.addData("top right encoder", topRight.getCurrentPosition());
+        telemetry.addData("bottom left encoder", bottomLeft.getCurrentPosition());
+        telemetry.addData("bottom right encoder", bottomRight.getCurrentPosition());
+        telemetry.addData("tSense red: ", tSense.red());
+        telemetry.addData("bSense red: ", bSense.red());
 
-        telemetry.addData("top left ", topLeft.getCurrentPosition());
-        telemetry.addData("top right ", topRight.getCurrentPosition());
-        telemetry.addData("current gyro angle ", Gyro.getPosition().z);
-        telemetry.update();
         //Turbo
         if(gamepad1.right_trigger == 1) {
             topLeft.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
@@ -144,10 +143,12 @@ public class TeleOp extends OpMode {
 
         //Normal Movement
 
-        topLeft.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * .5);
-        topRight.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x) * .5);
-        bottomLeft.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * .5);
-        bottomRight.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * .5);
+        topLeft.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * .12);
+        topRight.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x) * .12);
+        bottomLeft.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * .12);
+        bottomRight.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * .12);
+
+
 
 
 
@@ -172,10 +173,6 @@ public class TeleOp extends OpMode {
 
         launchLeft.setPower(gamepad2.right_trigger*powerBase);
         launchRight.setPower(gamepad2.right_trigger*powerBase);
-        if(launchLeft.getPower()>max*powerBase){
-            launchLeft.setPower(max*powerBase);
-            launchRight.setPower(max*powerBase);
-        }
 
         intake.setPower(gamepad1.left_trigger);
         if(intake.getPower()>inmax)
@@ -192,20 +189,12 @@ public class TeleOp extends OpMode {
         telemetry.addData("Chacha Power",this.hardwareMap.voltageSensor.iterator().next().getVoltage());
         telemetry.addData("ChaCha Power Multiplier", powerBase);
 
-        if(gamepad1.right_stick_button){
-            topLeft.setTargetPosition(1);
-            topRight.setTargetPosition(-1);
-            bottomLeft.setTargetPosition(1);
-            bottomRight.setTargetPosition(-1);
-            telemetry.addData("topLeftMotor Position", topLeft.getCurrentPosition());
-        }
         /*
-        
-
-        the
-
-
-
+        Color Sensor Range normal: 100 to 300
+        Color Sensor Range with ring: 4000 to 5000
+        auto1 = bSense false
+        auto2 = bSense true, tSense false
+        auto3 = bSense true, tSense true
          */
     }
 

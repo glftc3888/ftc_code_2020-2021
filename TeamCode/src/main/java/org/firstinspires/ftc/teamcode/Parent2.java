@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
@@ -24,26 +25,31 @@ abstract public class Parent2 extends LinearOpMode {
 
     ElapsedTime time = new ElapsedTime();
 
+    //DT
     DcMotor topLeft;
     DcMotor topRight;
     DcMotor bottomLeft;
     DcMotor bottomRight;
     DcMotor intake;
-    SensorREVColorDistance frontSensor;
-    BNO055IMU Gyro;
 
     DcMotor launchLeft;
     DcMotor launchRight;
 
-    ColorRangeSensor colorRangeSensor;
-    Servo servoLauncher;
+    RevColorSensorV3 tSense;
+    RevColorSensorV3 bSense;
 
     Servo clawGrab;
     Servo fPin;
     CRServo rAP;
     CRServo wrist;
     double powerBase;
+    /*
+    //Gyro
+    BNO055IMU imu;
+    Orientation angles;
+    */
 
+    //initalizes Robot
     public void initRobo() {
         topLeft = hardwareMap.dcMotor.get("topLeftMotor");
         topRight = hardwareMap.dcMotor.get("topRightMotor");
@@ -51,23 +57,13 @@ abstract public class Parent2 extends LinearOpMode {
         bottomRight = hardwareMap.dcMotor.get("bottomRightMotor");
         intake = hardwareMap.dcMotor.get("intake");
 
-        launchLeft = hardwareMap.dcMotor.get("launchLeftMotor");
-        launchRight = hardwareMap.dcMotor.get("launchRightMotor");
-
         clawGrab = hardwareMap.servo.get("grab");
         wrist = hardwareMap.crservo.get("wrist");
         rAP = hardwareMap.crservo.get("rAP");
         fPin = hardwareMap.servo.get("fPin");
 
-
-        Gyro = hardwareMap.get(BNO055IMU.class, "Gyro");
-        Orientation orient = new Orientation();
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        Gyro.initialize(parameters);
-        telemetry.addData("Calibrating Gyro: ", Gyro.getCalibrationStatus().toString());
-        telemetry.addData("Gyro ready?: ", Gyro.isGyroCalibrated());
-
+        tSense = hardwareMap.get(RevColorSensorV3.class, "tSense");
+        bSense = hardwareMap.get(RevColorSensorV3.class, "bSense");
 
         topLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         topRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -79,18 +75,13 @@ abstract public class Parent2 extends LinearOpMode {
         topRight.setDirection(DcMotorSimple.Direction.REVERSE);
         bottomLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         bottomRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        launchLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        launchRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
         clawGrab.setDirection(Servo.Direction.FORWARD);
         wrist.setDirection(CRServo.Direction.FORWARD);
         rAP.setDirection(CRServo.Direction.FORWARD);
         fPin.setDirection(Servo.Direction.FORWARD);
-
-        launchLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        launchRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         topLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -102,42 +93,33 @@ abstract public class Parent2 extends LinearOpMode {
         bottomLeft.setPower(0);
         bottomRight.setPower(0);
 
-        launchLeft.setPower(0);
-        launchRight.setPower(0);
-
 
         rAP.setPower(0);
         wrist.setPower(0);
 
-        launchLeft.setPower(0);
-        launchRight.setPower(0);
-
         fPin.setPosition(0.5);
-        clawGrab.setPosition(1);
 
-        topRight.setMode(bottomLeft.getMode());
-        topLeft.setMode(bottomLeft.getMode());
-        bottomRight.setMode(bottomLeft.getMode());
-
-        launchLeft.setMode(launchRight.getMode());
-        powerBase = 12/this.hardwareMap.voltageSensor.iterator().next().getVoltage();
+        bottomLeft.setMode(topLeft.getMode());
+        bottomRight.setMode(topRight.getMode());
         waitForStart();
 
     }
 
 
     //304.8mm = 1 foot, 1440 ticks = 100mm, 4,389 ticks = 1 foot
+    // distance = +70 for 1 tile (to front of bot)
     public void move(double power, int distance) {
         topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //bottomLeft.setMode(topLeft.getMode());
+        //bottomRight.setMode(topRight.getMode());
 
-
-        topLeft.setTargetPosition(-distance);
         topRight.setTargetPosition(-distance);
-        bottomLeft.setTargetPosition(-distance);
+        topLeft.setTargetPosition(-distance);
         bottomRight.setTargetPosition(-distance);
+        bottomLeft.setTargetPosition(-distance);
 
         topLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         topRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -145,11 +127,32 @@ abstract public class Parent2 extends LinearOpMode {
         bottomRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         topRight.setPower(power);
-        topLeft.setPower(-power);
+        topLeft.setPower(power);
         bottomRight.setPower(power);
-        bottomLeft.setPower(-power);
+        bottomLeft.setPower(power);
 
-        while (topLeft.isBusy() && bottomLeft.isBusy() && topRight.isBusy() && bottomRight.isBusy());
+        while (opModeIsActive() && topLeft.isBusy() && bottomLeft.isBusy() && topRight.isBusy() && bottomRight.isBusy()) {
+            telemetry.addData("Current topLeft position: ", topLeft.getCurrentPosition());
+            telemetry.update();
+            if(distance >= 0) {
+                if (topLeft.getCurrentPosition() >= distance) {
+                    topRight.setPower(0);
+                    topLeft.setPower(0);
+                    bottomRight.setPower(0);
+                    bottomLeft.setPower(0);
+                    break;
+                }
+            }
+            else{
+                if (topLeft.getCurrentPosition() <= distance) {
+                    topRight.setPower(0);
+                    topLeft.setPower(0);
+                    bottomRight.setPower(0);
+                    bottomLeft.setPower(0);
+                    break;
+                }
+            }
+        }
 
         topRight.setPower(0);
         topLeft.setPower(0);
@@ -159,21 +162,25 @@ abstract public class Parent2 extends LinearOpMode {
     }
 
     // +power = right, -power = Left
+    // power = 0.125
+    // distance = +70 for a tile (to right)
     public void moveSideways(double power, int distance) {
         topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        topLeft.setTargetPosition(distance);
         topRight.setTargetPosition(-distance);
-        bottomLeft.setTargetPosition(-distance);
+        topLeft.setTargetPosition(distance);
         bottomRight.setTargetPosition(distance);
+        bottomLeft.setTargetPosition(-distance);
+
 
         topLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         topRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         bottomLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         bottomRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         topRight.setPower(power);
         topLeft.setPower(-power);
@@ -181,47 +188,94 @@ abstract public class Parent2 extends LinearOpMode {
         bottomLeft.setPower(power);
 
 
-        while (topLeft.isBusy() && bottomLeft.isBusy() && topRight.isBusy() && bottomRight.isBusy()) {
-
+        while (opModeIsActive() && topLeft.isBusy() && bottomLeft.isBusy() && topRight.isBusy() && bottomRight.isBusy()) {
+            telemetry.addData("Current topLeft position: ", topLeft.getCurrentPosition());
+            telemetry.update();
+            if(distance >= 0) {
+                if (topLeft.getCurrentPosition() >= distance) {
+                    topRight.setPower(0);
+                    topLeft.setPower(0);
+                    bottomRight.setPower(0);
+                    bottomLeft.setPower(0);
+                    break;
+                }
+            }
+            else{
+                if (topLeft.getCurrentPosition() <= distance) {
+                    topRight.setPower(0);
+                    topLeft.setPower(0);
+                    bottomRight.setPower(0);
+                    bottomLeft.setPower(0);
+                    break;
+                }
+            }
         }
-
-
         topRight.setPower(0);
         topLeft.setPower(0);
         bottomRight.setPower(0);
         bottomLeft.setPower(0);
-
     }
 
     // turns,
+    // distance = +800 for 1 complete 360 rotation (to left)
     public void turn ( double power, int distance){
         topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        topLeft.setTargetPosition(-distance);
         topRight.setTargetPosition(distance);
-        bottomLeft.setTargetPosition(-distance);
+        topLeft.setTargetPosition(-distance);
         bottomRight.setTargetPosition(distance);
+        bottomLeft.setTargetPosition(-distance);
+
 
         topLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         topRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         bottomLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         bottomRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+
+
         topRight.setPower(-power);
         topLeft.setPower(power);
         bottomRight.setPower(-power);
         bottomLeft.setPower(power);
 
-        while (Math.abs(topLeft.getCurrentPosition()) < Math.abs(topLeft.getTargetPosition()));
-
+        while (opModeIsActive() && topLeft.isBusy() && bottomLeft.isBusy() && topRight.isBusy() && bottomRight.isBusy()) {
+            telemetry.addData("Current topLeft position: ", topLeft.getCurrentPosition());
+            telemetry.update();
+            if(distance >= 0) {
+                if (topLeft.getCurrentPosition() >= distance) {
+                    topRight.setPower(0);
+                    topLeft.setPower(0);
+                    bottomRight.setPower(0);
+                    bottomLeft.setPower(0);
+                    break;
+                }
+            }
+            else{
+                if (topLeft.getCurrentPosition() <= distance) {
+                    topRight.setPower(0);
+                    topLeft.setPower(0);
+                    bottomRight.setPower(0);
+                    bottomLeft.setPower(0);
+                    break;
+                }
+            }
+        }
         topRight.setPower(0);
         topLeft.setPower(0);
         bottomRight.setPower(0);
         bottomLeft.setPower(0);
     }
+    /*
+        Color Sensor Range normal: 100 to 300
+        Color Sensor Range with ring: 4000 to 5000
+        auto1 = bSense false
+        auto2 = bSense true, tSense false
+        auto3 = bSense true, tSense true
+    */
     public void moveRacPin(int time, double pow) throws InterruptedException {
         rAP.setPower(-pow);
 
@@ -238,4 +292,9 @@ abstract public class Parent2 extends LinearOpMode {
         wrist.setPower(0);
     }
 
+    public void moveGrip(double pos) throws InterruptedException {
+        clawGrab.setPosition(pos);
+
+        Thread.sleep(1000);
+    }
 }
