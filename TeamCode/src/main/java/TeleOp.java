@@ -31,8 +31,8 @@ public class TeleOp extends OpMode {
     CRServo rAP;
     CRServo wrist;
 
-    RevColorSensorV3 tSense;
-    RevColorSensorV3 bSense;
+    //RevColorSensorV3 tSense;
+    //RevColorSensorV3 bSense;
 
 
     double powerBase;
@@ -50,8 +50,8 @@ public class TeleOp extends OpMode {
         launchRight = hardwareMap.dcMotor.get("launchRightMotor");
 
 
-        tSense = hardwareMap.get(RevColorSensorV3.class, "tSense");
-        bSense = hardwareMap.get(RevColorSensorV3.class, "bSense");
+        //tSense = hardwareMap.get(RevColorSensorV3.class, "tSense");
+        //bSense = hardwareMap.get(RevColorSensorV3.class, "bSense");
 
 
         clawGrab = hardwareMap.servo.get("grab");
@@ -70,10 +70,10 @@ public class TeleOp extends OpMode {
         launchRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        topLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        topRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        bottomLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        bottomRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        topLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        topRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
 
@@ -86,7 +86,7 @@ public class TeleOp extends OpMode {
         wrist.setDirection(CRServo.Direction.FORWARD);
         rAP.setDirection(CRServo.Direction.FORWARD);
         fPin.setDirection(Servo.Direction.FORWARD);
-
+        /*
         topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -96,13 +96,20 @@ public class TeleOp extends OpMode {
         topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        */
+        telemetry.addData("top left power", topLeft.getPower());
+        telemetry.addData("top right power", topRight.getPower());
+        telemetry.addData("bottom left power", bottomLeft.getPower());
+        telemetry.addData("bottom right power", bottomRight.getPower());
+        //telemetry.addData("tSense red: ", tSense.red());
+        //telemetry.addData("bSense red: ", bSense.red());
 
 
         topLeft.setPower(0);
         topRight.setPower(0);
         bottomLeft.setPower(0);
         bottomRight.setPower(0);
+
         intake.setPower(0);
         launchLeft.setPower(0);
         launchRight.setPower(0);
@@ -114,6 +121,7 @@ public class TeleOp extends OpMode {
         topRight.setMode(bottomLeft.getMode());
         topLeft.setMode(bottomLeft.getMode());
         bottomRight.setMode(bottomLeft.getMode());
+
         launchLeft.setMode(launchRight.getMode());
     }
 
@@ -121,32 +129,27 @@ public class TeleOp extends OpMode {
     public void loop() {
         powerBase = 12/this.hardwareMap.voltageSensor.iterator().next().getVoltage();
         double inmax = 0.75;
-        
+        /*
         telemetry.addData("top left encoder", topLeft.getCurrentPosition());
         telemetry.addData("top right encoder", topRight.getCurrentPosition());
         telemetry.addData("bottom left encoder", bottomLeft.getCurrentPosition());
         telemetry.addData("bottom right encoder", bottomRight.getCurrentPosition());
-        telemetry.addData("tSense red: ", tSense.red());
-        telemetry.addData("bSense red: ", bSense.red());
+        */
 
         //Turbo
         if(gamepad1.right_trigger == 1) {
-            topLeft.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
-            telemetry.addData("TLpower ", topLeft.getPower());
-            topRight.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
-            telemetry.addData("TRpower ", topRight.getPower());
-            bottomLeft.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
-            telemetry.addData("BLpower ", bottomLeft.getPower());
-            bottomRight.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x);
-            telemetry.addData("BRpower ", bottomRight.getPower());
+            topLeft.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x);
+            topRight.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x);
+            bottomLeft.setPower(gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x);
+            bottomRight.setPower(gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x);
         }
 
         //Normal Movement
 
-        topLeft.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * .12);
-        topRight.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x) * .12);
-        bottomLeft.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * .12);
-        bottomRight.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * .12);
+        topLeft.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x) * .5);
+        topRight.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * .5);
+        bottomLeft.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * .5);
+        bottomRight.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * .5);
 
 
 

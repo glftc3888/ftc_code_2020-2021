@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import org.firstinspires.ftc.teamcode.Parent;
 
 @Autonomous(name = "GyroTest", group = "autonomous")
-public class GyroTest extends Parent {
+public class GyroTest extends Parent2 {
 
     public void runOpMode() throws InterruptedException {
         initRobo();
-        turnHeading(90);
+        move(0.25,2800);
 
 
     }

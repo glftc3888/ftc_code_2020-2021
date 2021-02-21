@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: org.firstinspires.ftc:Hardware:5.5@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3b581096241b3ede995808bb46c2dfee/jetified-Hardware-5.5/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3b581096241b3ede995808bb46c2dfee/jetified-Hardware-5.5/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/3b581096241b3ede995808bb46c2dfee/jetified-Hardware-5.5/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/09ad67878720404923461057d83c731f/transformed/jetified-Hardware-5.5/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/09ad67878720404923461057d83c731f/transformed/jetified-Hardware-5.5/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/09ad67878720404923461057d83c731f/transformed/jetified-Hardware-5.5/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.firstinspires.ftc/Hardware/5.5/769f879d8d8efa48204cbc2016cc60bbffe8fd44/Hardware-5.5-javadoc.jar!/" />

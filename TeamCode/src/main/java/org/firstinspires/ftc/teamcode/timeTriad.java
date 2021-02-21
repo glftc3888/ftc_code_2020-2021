@@ -2,21 +2,26 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-//Primary Autonomous (holds all three events)
-@Autonomous(name = "autoTriad", group = "autononmous")
-public class autoTriad extends Parent2{
+//Primary Time Autonomous (holds all three events)
+@Autonomous(name = "time_Triad", group = "autononmous")
+public class timeTriad extends Parent{
     public void runOpMode() throws InterruptedException {
         initRobo();
         powerBase = 12/this.hardwareMap.voltageSensor.iterator().next().getVoltage();
-        move(.25, 70);
+        fRbR(600,0.5);
         Thread.sleep(1000); //wait
-        moveSideways(.25,-70);
+        rotation(500,.125);
+        Thread.sleep(1000);
+        fRbR(500,0.5);
+        Thread.sleep(1000);
+        rotation(500,-0.125);
         Thread.sleep(1000);
         if(260 >= bSense.red()){
             //auto1
-            turn(.25, 800);
+            rotation(800,.25);
             Thread.sleep(1000); //wait
-            move(.25, -105);
+            fRbR(1000,-0.5);
+            Thread.sleep(1000);
             moveRacPin(2500, -1);
             moveWrist(1000, -1);
             moveGrip(0);
@@ -24,23 +29,23 @@ public class autoTriad extends Parent2{
         }
         else if(260 <= bSense.red() && 4000 >= tSense.red()){
             //auto2
-            move(.25,210);
+            fRbR(1000,0.5);
             Thread.sleep(1000); //wait
-            moveSideways(.25,-70);
+            sideways(800,-0.12);
             moveRacPin(2500, -1);
             moveWrist(1000, -1);
             moveGrip(0);
-            move(.25,-210);
+            fRbR(800,-0.5);
         }
         else if(260 <= bSense.red() && 4000 <= tSense.red()){
             //auto3
-            turn(.25, 800);
+            rotation(800,.25);
             Thread.sleep(1000); //wait
-            move(.25, -245);
+            fRbR(2000, -0.5);
             moveRacPin(2500, -1);
             moveWrist(1000, -1);
             moveGrip(0);
-            move(.25,245);
+            fRbR(1600,-0.5);
         }
     }
 }

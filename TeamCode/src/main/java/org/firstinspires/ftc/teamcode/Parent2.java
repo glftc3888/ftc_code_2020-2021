@@ -71,10 +71,10 @@ abstract public class Parent2 extends LinearOpMode {
         bottomRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        topLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        topRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        bottomLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        bottomRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        topLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        topRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        bottomLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -99,8 +99,6 @@ abstract public class Parent2 extends LinearOpMode {
 
         fPin.setPosition(0.5);
 
-        bottomLeft.setMode(topLeft.getMode());
-        bottomRight.setMode(topRight.getMode());
         waitForStart();
 
     }
@@ -131,29 +129,13 @@ abstract public class Parent2 extends LinearOpMode {
         bottomRight.setPower(power);
         bottomLeft.setPower(power);
 
-        while (opModeIsActive() && topLeft.isBusy() && bottomLeft.isBusy() && topRight.isBusy() && bottomRight.isBusy()) {
-            telemetry.addData("Current topLeft position: ", topLeft.getCurrentPosition());
-            telemetry.update();
-            if(distance >= 0) {
-                if (topLeft.getCurrentPosition() >= distance) {
-                    topRight.setPower(0);
-                    topLeft.setPower(0);
-                    bottomRight.setPower(0);
-                    bottomLeft.setPower(0);
-                    break;
-                }
-            }
-            else{
-                if (topLeft.getCurrentPosition() <= distance) {
-                    topRight.setPower(0);
-                    topLeft.setPower(0);
-                    bottomRight.setPower(0);
-                    bottomLeft.setPower(0);
-                    break;
-                }
+        outerM: while(true){
+            if(Math.abs(topLeft.getCurrentPosition()) >= Math.abs(distance)){
+                break outerM;
             }
         }
 
+        telemetry.addLine("The while loop broke.");
         topRight.setPower(0);
         topLeft.setPower(0);
         bottomRight.setPower(0);
@@ -188,26 +170,9 @@ abstract public class Parent2 extends LinearOpMode {
         bottomLeft.setPower(power);
 
 
-        while (opModeIsActive() && topLeft.isBusy() && bottomLeft.isBusy() && topRight.isBusy() && bottomRight.isBusy()) {
-            telemetry.addData("Current topLeft position: ", topLeft.getCurrentPosition());
-            telemetry.update();
-            if(distance >= 0) {
-                if (topLeft.getCurrentPosition() >= distance) {
-                    topRight.setPower(0);
-                    topLeft.setPower(0);
-                    bottomRight.setPower(0);
-                    bottomLeft.setPower(0);
-                    break;
-                }
-            }
-            else{
-                if (topLeft.getCurrentPosition() <= distance) {
-                    topRight.setPower(0);
-                    topLeft.setPower(0);
-                    bottomRight.setPower(0);
-                    bottomLeft.setPower(0);
-                    break;
-                }
+        outerMS: while(true) {
+            if(Math.abs(topLeft.getCurrentPosition()) >= Math.abs(distance)){
+                break outerMS;
             }
         }
         topRight.setPower(0);
@@ -242,28 +207,13 @@ abstract public class Parent2 extends LinearOpMode {
         bottomRight.setPower(-power);
         bottomLeft.setPower(power);
 
-        while (opModeIsActive() && topLeft.isBusy() && bottomLeft.isBusy() && topRight.isBusy() && bottomRight.isBusy()) {
-            telemetry.addData("Current topLeft position: ", topLeft.getCurrentPosition());
-            telemetry.update();
-            if(distance >= 0) {
-                if (topLeft.getCurrentPosition() >= distance) {
-                    topRight.setPower(0);
-                    topLeft.setPower(0);
-                    bottomRight.setPower(0);
-                    bottomLeft.setPower(0);
-                    break;
-                }
-            }
-            else{
-                if (topLeft.getCurrentPosition() <= distance) {
-                    topRight.setPower(0);
-                    topLeft.setPower(0);
-                    bottomRight.setPower(0);
-                    bottomLeft.setPower(0);
-                    break;
-                }
+
+        outerT: while(true) {
+            if(Math.abs(topLeft.getCurrentPosition()) >= Math.abs(distance)){
+                break outerT;
             }
         }
+
         topRight.setPower(0);
         topLeft.setPower(0);
         bottomRight.setPower(0);
