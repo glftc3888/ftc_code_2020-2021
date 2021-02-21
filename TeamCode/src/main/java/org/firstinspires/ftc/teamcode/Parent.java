@@ -1,15 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDistance;
 
@@ -22,20 +30,20 @@ public abstract class Parent extends LinearOpMode {
     DcMotor bottomLeft;
     DcMotor bottomRight;
     DcMotor intake;
-    SensorREVColorDistance frontSensor;
     BNO055IMU Gyro;
 
     DcMotor launchLeft;
     DcMotor launchRight;
 
-    ColorRangeSensor colorRangeSensor;
-    Servo servoLauncher;
+    RevColorSensorV3 tSense;
+    RevColorSensorV3 bSense;
 
     Servo clawGrab;
     Servo fPin;
     CRServo rAP;
     CRServo wrist;
     double powerBase;
+    double startPos;
 
     public void initRobo() {
         topLeft = hardwareMap.dcMotor.get("topLeftMotor");
@@ -52,15 +60,30 @@ public abstract class Parent extends LinearOpMode {
         rAP = hardwareMap.crservo.get("rAP");
         fPin = hardwareMap.servo.get("fPin");
 
-
+        /*
         Gyro = hardwareMap.get(BNO055IMU.class, "Gyro");
         Orientation orient = new Orientation();
+        orient = this.Gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        startPos = Math.abs(orient.firstAngle);
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = true;
+        parameters.loggingTag ="Gyro";
         Gyro.initialize(parameters);
         telemetry.addData("Calibrating Gyro: ", Gyro.getCalibrationStatus().toString());
         telemetry.addData("Gyro ready?: ", Gyro.isGyroCalibrated());
-
+        while(!Gyro.isGyroCalibrated()){
+            telemetry.addData("Please wait while Gyro starts: ", Gyro.isGyroCalibrated());
+            if(Gyro.isGyroCalibrated()){
+                break;
+            }
+        }
+        telemetry.update();
+        */
+        tSense = hardwareMap.get(RevColorSensorV3.class, "tSense");
+        bSense = hardwareMap.get(RevColorSensorV3.class, "bSense");
 
         topLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         topRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -74,8 +97,8 @@ public abstract class Parent extends LinearOpMode {
         bottomRight.setDirection(DcMotorSimple.Direction.FORWARD);
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        launchLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        launchRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        launchLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        launchRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         clawGrab.setDirection(Servo.Direction.FORWARD);
         wrist.setDirection(CRServo.Direction.FORWARD);
@@ -113,6 +136,7 @@ public abstract class Parent extends LinearOpMode {
 
         launchLeft.setMode(launchRight.getMode());
         powerBase = 12/this.hardwareMap.voltageSensor.iterator().next().getVoltage();
+
         waitForStart();
     }
 
@@ -125,10 +149,10 @@ public abstract class Parent extends LinearOpMode {
     }
 
     public void setPowerAll(double pow) {
-        topLeft.setPower(pow*powerBase);
-        topRight.setPower(pow*powerBase);
-        bottomLeft.setPower(pow*powerBase);
-        bottomRight.setPower(pow*powerBase);
+        topLeft.setPower(pow);
+        topRight.setPower(pow);
+        bottomLeft.setPower(pow);
+        bottomRight.setPower(pow);
     }
 
     public void setPowerAll(double powTL, double powTR, double powBL, double powBR) {
@@ -237,9 +261,10 @@ public abstract class Parent extends LinearOpMode {
     public void returnfPin() throws InterruptedException {
         fPin.setPosition(0.5);
     }
+    /*
     public boolean isAngleInRange(double angle){
-        double roughSuperAngle = angle + 0.25;
-        double roughSubAngle = angle - 0.25;
+        double roughSuperAngle = angle + 0.0125;
+        double roughSubAngle = angle - 0.0125;
         if(roughSubAngle < Gyro.getPosition().z && Gyro.getPosition().z < roughSuperAngle){
             return true;
         }
@@ -247,24 +272,23 @@ public abstract class Parent extends LinearOpMode {
             return false;
         }
     }
-    public void turnHeading(double angle, int time) throws InterruptedException{
+    public void turnHeading(double angle) throws InterruptedException{
+        //Turns to specific angle and resets to zero orientation
         while (!isAngleInRange(angle) && opModeIsActive()){
-            if(angle > Math.abs(Gyro.getAngularOrientation().firstAngle)){
-                topLeft.setPower(-0.05);
-                topRight.setPower(0.05);
-                bottomLeft.setPower(-0.05);
-                bottomRight.setPower(0.05);
-                telemetry.addData("Currently buffering, position :", Gyro.getAngularOrientation().firstAngle);
+            if(angle > Math.abs(Gyro.getAngularOrientation().firstAngle)) {
+                topLeft.setPower(-0.025);
+                topRight.setPower(0.025);
+                bottomLeft.setPower(-0.025);
+                bottomRight.setPower(0.025);
                 if (isAngleInRange(angle)) {
                     break;
                 }
             }
             else if(angle < Math.abs(Gyro.getAngularOrientation().firstAngle)){
-                topLeft.setPower(0.05);
-                topRight.setPower(-0.05);
-                bottomLeft.setPower(0.05);
-                bottomRight.setPower(-0.05);
-                telemetry.addData("Currently buffering, position :", Gyro.getAngularOrientation().firstAngle);
+                topLeft.setPower(0.025);
+                topRight.setPower(-0.025);
+                bottomLeft.setPower(0.025);
+                bottomRight.setPower(-0.025);
                 if (isAngleInRange(angle)) {
                     break;
                 }
@@ -273,8 +297,56 @@ public abstract class Parent extends LinearOpMode {
                 break;
             }
         }
+    } ///The following code is a test: Not completed
+    public boolean isAngleInRangeTest(double angle){
+        double roughSuperAngle = angle + 0.25;
+        double roughSubAngle = angle - 0.25;
+        double currentAng = Math.abs(Gyro.getAngularOrientation().firstAngle);
+        if(roughSubAngle < currentAng && currentAng < roughSuperAngle){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
-
+    public void turnSetOrientation(double angle) throws InterruptedException {
+        //Turns to specific angle
+        if(Gyro.isGyroCalibrated()) {
+            while (!isAngleInRangeTest(angle) && opModeIsActive()) {
+                double currentAng = Math.abs(Gyro.getAngularOrientation().firstAngle);
+                telemetry.addData("Current Angle: ", currentAng);
+                telemetry.update();
+                if (currentAng > angle) {
+                    topLeft.setPower(-0.025);
+                    topRight.setPower(0.025);
+                    bottomLeft.setPower(-0.025);
+                    bottomRight.setPower(0.025);
+                    telemetry.addData("Current Angle: ", currentAng);
+                    telemetry.update();
+                    if (isAngleInRangeTest(angle)) {
+                        break;
+                    }
+                } else if (currentAng < angle) {
+                    topLeft.setPower(0.025);
+                    topRight.setPower(-0.025);
+                    bottomLeft.setPower(0.025);
+                    bottomRight.setPower(-0.025);
+                    telemetry.addData("Current Angle: ", currentAng);
+                    telemetry.update();
+                    if (isAngleInRangeTest(angle)) {
+                        break;
+                    }
+                } else {
+                    telemetry.addData("Current Angle: ", currentAng);
+                    telemetry.update();
+                    break;
+                }
+            }
+        }
+        else{
+            telemetry.addData("Calibration is buffering", Gyro.getCalibrationStatus().toString());
+        }
+    }*/
 }
 
     /*
