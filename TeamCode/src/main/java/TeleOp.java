@@ -12,6 +12,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp", group = "TeleOp")
 
 public class TeleOp extends OpMode {
@@ -31,27 +36,32 @@ public class TeleOp extends OpMode {
     CRServo rAP;
     CRServo wrist;
 
-    //RevColorSensorV3 tSense;
-    //RevColorSensorV3 bSense;
+    RevColorSensorV3 tSense;
+    RevColorSensorV3 bSense;
+
+    BNO055IMU imu;
+    Orientation angles;
 
 
     double powerBase;
     boolean on_off = false;
     int pinPower;
     int intakePower;
+    double max =0.8;
 
     public void init(){
         topLeft = hardwareMap.dcMotor.get("topLeftMotor");
         topRight = hardwareMap.dcMotor.get("topRightMotor");
         bottomLeft = hardwareMap.dcMotor.get("bottomLeftMotor");
         bottomRight = hardwareMap.dcMotor.get("bottomRightMotor");
+
         intake = hardwareMap.dcMotor.get("intake");
         launchLeft = hardwareMap.dcMotor.get("launchLeftMotor");
         launchRight = hardwareMap.dcMotor.get("launchRightMotor");
 
 
-        //tSense = hardwareMap.get(RevColorSensorV3.class, "tSense");
-        //bSense = hardwareMap.get(RevColorSensorV3.class, "bSense");
+        tSense = hardwareMap.get(RevColorSensorV3.class, "tSense");
+        bSense = hardwareMap.get(RevColorSensorV3.class, "bSense");
 
 
         clawGrab = hardwareMap.servo.get("grab");
@@ -96,14 +106,14 @@ public class TeleOp extends OpMode {
         topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        */
+
         telemetry.addData("top left power", topLeft.getPower());
         telemetry.addData("top right power", topRight.getPower());
         telemetry.addData("bottom left power", bottomLeft.getPower());
         telemetry.addData("bottom right power", bottomRight.getPower());
-        //telemetry.addData("tSense red: ", tSense.red());
-        //telemetry.addData("bSense red: ", bSense.red());
-
+        telemetry.addData("tSense red: ", tSense.red());
+        telemetry.addData("bSense red: ", bSense.red());
+        */
 
         topLeft.setPower(0);
         topRight.setPower(0);
@@ -118,23 +128,39 @@ public class TeleOp extends OpMode {
         wrist.setPower(0);
         fPin.setPosition(0.5);
 
-        topRight.setMode(bottomLeft.getMode());
-        topLeft.setMode(bottomLeft.getMode());
-        bottomRight.setMode(bottomLeft.getMode());
+        tSense.enableLed(false);
+        bSense.enableLed(false);
 
-        launchLeft.setMode(launchRight.getMode());
+        tSense.close();
+        bSense.close();
+
+        topLeft.setMode(topRight.getMode());
+        bottomLeft.setMode(topRight.getMode());
+        bottomRight.setMode(topRight.getMode());
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
     }
 
 
     public void loop() {
         powerBase = 12/this.hardwareMap.voltageSensor.iterator().next().getVoltage();
         double inmax = 0.75;
-        /*
-        telemetry.addData("top left encoder", topLeft.getCurrentPosition());
-        telemetry.addData("top right encoder", topRight.getCurrentPosition());
-        telemetry.addData("bottom left encoder", bottomLeft.getCurrentPosition());
-        telemetry.addData("bottom right encoder", bottomRight.getCurrentPosition());
-        */
+        if(gamepad2.y)
+           max = 0.8;
+        if(gamepad2.x)
+           max = 0.9;
+/*
+        telemetry.addData("top left encoder", (double)topLeft.getCurrentPosition());
+        telemetry.addData("top right encoder", (double)topRight.getCurrentPosition());
+        telemetry.addData("bottom left encoder", (double)bottomLeft.getCurrentPosition());
+        telemetry.addData("bottom right encoder", (double)bottomRight.getCurrentPosition());
+*/
+
 
         //Turbo
         if(gamepad1.right_trigger == 1) {
@@ -145,14 +171,10 @@ public class TeleOp extends OpMode {
         }
 
         //Normal Movement
-
         topLeft.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x - gamepad1.right_stick_x) * .5);
         topRight.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x) * .5);
         bottomLeft.setPower((gamepad1.left_stick_y + gamepad1.left_stick_x - gamepad1.right_stick_x) * .5);
         bottomRight.setPower((gamepad1.left_stick_y - gamepad1.left_stick_x + gamepad1.right_stick_x) * .5);
-
-
-
 
 
         rAP.setPower(-gamepad2.left_stick_y);
@@ -172,10 +194,12 @@ public class TeleOp extends OpMode {
         telemetry.addData("PewPew Left", launchLeft.getPower());
         telemetry.addData("PewPew Right", launchRight.getPower());
 
-
-
         launchLeft.setPower(gamepad2.right_trigger*powerBase);
         launchRight.setPower(gamepad2.right_trigger*powerBase);
+        if(launchLeft.getPower()>max*powerBase){
+            launchLeft.setPower(max*powerBase);
+            launchRight.setPower(max*powerBase);
+        }
 
         intake.setPower(gamepad1.left_trigger);
         if(intake.getPower()>inmax)
@@ -189,9 +213,10 @@ public class TeleOp extends OpMode {
         else
             fPin.setPosition(0.5);
 
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         telemetry.addData("Chacha Power",this.hardwareMap.voltageSensor.iterator().next().getVoltage());
         telemetry.addData("ChaCha Power Multiplier", powerBase);
-
+        telemetry.addData("Currently buffering, position :", angles.firstAngle);
         /*
         Color Sensor Range normal: 100 to 300
         Color Sensor Range with ring: 4000 to 5000

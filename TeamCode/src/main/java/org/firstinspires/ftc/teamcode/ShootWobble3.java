@@ -4,14 +4,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.CRServo;
 
 import org.firstinspires.ftc.teamcode.Parent;
+/*
 
 @Autonomous(name = "Shoot_Wobble_3", group = "autonomous")
+ */
 public class ShootWobble3 extends Parent {
 
     public void runOpMode() throws InterruptedException {
         initRobo();
         //Align and Shoot
-        fRbR(500, .05);
+      /*  fRbR(500, .05);
         Thread.sleep(500);
         sideways(1300, -0.1);
         Thread.sleep(1000);
@@ -36,6 +38,6 @@ public class ShootWobble3 extends Parent {
         moveRacPin(2750,1);
         moveGrip(1);
         sideways(1150,1);
-    }
+    */}
 
 }

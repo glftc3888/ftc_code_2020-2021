@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
@@ -30,6 +31,7 @@ abstract public class Parent2 extends LinearOpMode {
     DcMotor topRight;
     DcMotor bottomLeft;
     DcMotor bottomRight;
+
     DcMotor intake;
 
     DcMotor launchLeft;
@@ -69,6 +71,7 @@ abstract public class Parent2 extends LinearOpMode {
         topRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bottomRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         topLeft.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -87,6 +90,11 @@ abstract public class Parent2 extends LinearOpMode {
         topRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bottomRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         topLeft.setPower(0);
         topRight.setPower(0);
@@ -107,13 +115,14 @@ abstract public class Parent2 extends LinearOpMode {
     //304.8mm = 1 foot, 1440 ticks = 100mm, 4,389 ticks = 1 foot
     // distance = +70 for 1 tile (to front of bot)
     public void move(double power, int distance) {
+        /*
         topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //bottomLeft.setMode(topLeft.getMode());
         //bottomRight.setMode(topRight.getMode());
-
+        */
         topRight.setTargetPosition(-distance);
         topLeft.setTargetPosition(-distance);
         bottomRight.setTargetPosition(-distance);
@@ -146,12 +155,13 @@ abstract public class Parent2 extends LinearOpMode {
     // +power = right, -power = Left
     // power = 0.125
     // distance = +70 for a tile (to right)
-    public void moveSideways(double power, int distance) {
+    public void moveSideways(double power, int distance){
+        /*
         topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        */
         topRight.setTargetPosition(-distance);
         topLeft.setTargetPosition(distance);
         bottomRight.setTargetPosition(distance);
@@ -165,13 +175,18 @@ abstract public class Parent2 extends LinearOpMode {
 
 
         topRight.setPower(power);
-        topLeft.setPower(-power);
-        bottomRight.setPower(-power);
+        topLeft.setPower(power);
+        bottomRight.setPower(power);
         bottomLeft.setPower(power);
 
 
-        outerMS: while(true) {
-            if(Math.abs(topLeft.getCurrentPosition()) >= Math.abs(distance)){
+        outerMS: while(topLeft.isBusy() && topRight.isBusy() && bottomLeft.isBusy() && bottomRight.isBusy()){
+            telemetry.addData("tL pos ", topLeft.getCurrentPosition());
+            telemetry.addData("tR pos ", topRight.getCurrentPosition());
+            telemetry.addData("bL pos ", bottomLeft.getCurrentPosition());
+            telemetry.addData("bR pos ", bottomRight.getCurrentPosition());
+            telemetry.update();
+            if(!(topLeft.isBusy() && topRight.isBusy() && bottomLeft.isBusy() && bottomRight.isBusy())){
                 break outerMS;
             }
         }
@@ -184,11 +199,12 @@ abstract public class Parent2 extends LinearOpMode {
     // turns,
     // distance = +800 for 1 complete 360 rotation (to left)
     public void turn ( double power, int distance){
+        /*
         topLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         topRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottomRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        */
         topRight.setTargetPosition(distance);
         topLeft.setTargetPosition(-distance);
         bottomRight.setTargetPosition(distance);
@@ -202,9 +218,9 @@ abstract public class Parent2 extends LinearOpMode {
 
 
 
-        topRight.setPower(-power);
+        topRight.setPower(power);
         topLeft.setPower(power);
-        bottomRight.setPower(-power);
+        bottomRight.setPower(power);
         bottomLeft.setPower(power);
 
 

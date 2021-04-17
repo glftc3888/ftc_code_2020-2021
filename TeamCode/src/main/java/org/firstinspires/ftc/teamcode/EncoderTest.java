@@ -10,15 +10,9 @@ public class EncoderTest extends Parent2 {
 
     public void runOpMode() throws InterruptedException {
         initRobo();
-        move(0.1,500);
-        moveSideways(0.1,500);
-        move(-0.1,-500);
-        moveSideways(-0.1,-500);
-        turn(1, 2000);
-        turn(0.5,500);
-        wait(2000);
-        turn(-1,-2000);
-        turn(-0.5,-500);
+        moveSideways(4389,1);
+        move(30723,1);
+        turn(4000,1);
+        moveSideways(8778,1);
     }
-
 }

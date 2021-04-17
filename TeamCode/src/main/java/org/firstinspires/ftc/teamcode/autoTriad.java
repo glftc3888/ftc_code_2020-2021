@@ -3,44 +3,49 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 //Primary Autonomous (holds all three events)
+/*
+
 @Autonomous(name = "autoTriad", group = "autononmous")
+
 public class autoTriad extends Parent2{
     public void runOpMode() throws InterruptedException {
         initRobo();
         powerBase = 12/this.hardwareMap.voltageSensor.iterator().next().getVoltage();
-        move(.25, 70);
-        Thread.sleep(1000); //wait
-        moveSideways(.25,-70);
+        move(.50, 2400);
+        Thread.sleep(1500); //wait
+        moveSideways(.50,1400);
         Thread.sleep(1000);
-        if(260 >= bSense.red()){
+        if(190 > bSense.red()){
             //auto1
-            turn(.25, 800);
+            turn(.50, 1400);
             Thread.sleep(1000); //wait
-            move(.25, -105);
+            move(.50, -105);
             moveRacPin(2500, -1);
             moveWrist(1000, -1);
             moveGrip(0);
 
         }
-        else if(260 <= bSense.red() && 4000 >= tSense.red()){
+        else if(190 <= bSense.red() && 4000 >= tSense.red()){
             //auto2
-            move(.25,210);
+            move(.50,210);
             Thread.sleep(1000); //wait
-            moveSideways(.25,-70);
+            moveSideways(.50,-70);
             moveRacPin(2500, -1);
             moveWrist(1000, -1);
             moveGrip(0);
-            move(.25,-210);
+            move(.50,-210);
         }
         else if(260 <= bSense.red() && 4000 <= tSense.red()){
             //auto3
-            turn(.25, 800);
+            turn(.50, 800);
             Thread.sleep(1000); //wait
-            move(.25, -245);
+            move(.50, -245);
             moveRacPin(2500, -1);
             moveWrist(1000, -1);
             moveGrip(0);
-            move(.25,245);
+            move(.50,245);
         }
     }
+
 }
+ */
